@@ -1,4 +1,5 @@
 (require 'aws-core)
+(require 'aws-log-streams)
 
 (defun aws-logs-describe-log-groups ()
   (fset 'aws-last-view 'aws-logs)
@@ -9,6 +10,7 @@
 
 (defvar aws-logs-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "RET") 'aws-log-streams-from-line-under-cursor)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     map))
@@ -25,4 +27,4 @@
   (use-local-map aws-logs-mode-map)
   (aws-logs-describe-log-groups))
 
-(provide 'aws-cloudwatch)
+(provide 'aws-logs)

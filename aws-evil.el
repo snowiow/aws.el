@@ -39,8 +39,14 @@
 
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map
+  (kbd "RET") #'aws-log-streams-from-line-under-cursor
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws)
+
+;; aws-log-streams
+(evil-define-key 'normal aws-log-streams-mode-map
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws-logs)
 
 ;; aws-s3-mode
 (evil-define-key 'normal aws-s3-mode-map
