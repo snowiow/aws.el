@@ -45,6 +45,7 @@
 
 ;; aws-log-streams
 (evil-define-key 'normal aws-log-streams-mode-map
+  (kbd "RET") #'aws-log-get-log-events-in-log-streams-view
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-logs)
 

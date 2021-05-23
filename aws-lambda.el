@@ -1,5 +1,6 @@
 (require 'evil)
 (require 'aws-core)
+(require 'aws-log-streams)
 (require 'aws-view)
 (require 'transient)
 
@@ -31,15 +32,8 @@
            (shell-command-to-string
             (concat
              (aws-cmd)
-             "logs describe-log-streams --log-group-name '"
-             log-group-name
-             "' --max-items 1 --order-by LastEventTime --descending --query logStreams[].logStreamName --output text")) "\n")))
-          (get-logs-cmd
-           (concat (aws-cmd) "logs get-log-events --log-group-name '" log-group-name "' --log-stream-name '" latest-log-stream "'")))
-    (call-process-shell-command get-logs-cmd nil buffer)
-    (switch-to-buffer buffer)
-    (with-current-buffer buffer
-      (aws-view-mode))))
+             (aws-log-streams-get-latest-logs-command log-group-name "1"))) "\n"))))
+    (aws-log-get-log-events log-group-name latest-log-stream)))
 
 (define-transient-command aws-lambda-help-popup ()
   "AWS Lambda Menu"
