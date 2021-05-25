@@ -14,7 +14,6 @@
             max-items-string)))
 
 (defun aws-log-streams-describe-log-streams (log-group-name)
-  (fset 'aws-last-view 'aws-logs)
   (aws--tabulated-list-from-command
    (aws-log-streams-get-latest-logs-command log-group-name)
    [("Log Streams" 100)]))

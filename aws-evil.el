@@ -32,9 +32,10 @@
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map
   (kbd "RET") #'aws-lambda-get-function
-  (kbd "q") #'aws
-  (kbd "?")  #'aws-lambda-help-popup
+  (kbd "q")   #'aws
+  (kbd "?")   #'aws-lambda-help-popup
   (kbd "L")   #'aws-lambda-get-latest-logs
+  (kbd "l")   #'aws-lambda-describe-log-streams
   (kbd "P")   #'aws-set-profile)
 
 ;; aws-logs-mode

@@ -23,8 +23,7 @@
 
 (defun aws-lambda-get-latest-logs ()
   (interactive)
-  (let* ((buffer "*lambda-info*")
-         (function-name (aref (tabulated-list-get-entry) 0))
+  (let* ((function-name (aref (tabulated-list-get-entry) 0))
          (log-group-name (concat "/aws/lambda/" function-name))
          (latest-log-stream
           (car 
@@ -35,11 +34,18 @@
              (aws-log-streams-get-latest-logs-command log-group-name "1"))) "\n"))))
     (aws-log-get-log-events log-group-name latest-log-stream)))
 
+(defun aws-lambda-describe-log-streams ()
+  (interactive)
+  (let* ((function-name (aref (tabulated-list-get-entry) 0))
+         (log-group-name (concat "/aws/lambda/" function-name)))
+    (aws-log-streams log-group-name)))
+
 (define-transient-command aws-lambda-help-popup ()
   "AWS Lambda Menu"
   ["Actions"
    ("RET" "Get Function" aws-lambda-get-function)
    ("q" "Service Overview" aws)
+   ("l" "Get log streams" aws-lambda-describe-log-streams)
    ("L" "Get latest logs" aws-lambda-get-latest-logs)])
 
 (defvar aws-lambda-mode-map
@@ -47,18 +53,10 @@
     (define-key map (kbd "RET") 'aws-lambda-get-function)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "?") 'aws-lambda-help-popup)
+    (define-key map (kbd "l") 'aws-lambda-describe-log-streams)
     (define-key map (kbd "L") 'aws-lambda-get-latest-logs)
     (define-key map (kbd "P") 'aws-set-profile)
     map))
-
-;; (evil-set-initial-state 'aws-lambda-mode 'motion)
-
-;; (evil-define-key 'motion aws-lambda-mode-map
-;;   (kbd "RET") #'aws-lambda-get-function
-;;   (kbd "q") #'aws
-;;   (kbd "?")  #'aws-lambda-help-popup
-;;   (kbd "L")   #'aws-lambda-get-latest-logs
-;;   (kbd "P")   #'aws-set-profile)
 
 (defun aws-lambda ()
   (interactive)
