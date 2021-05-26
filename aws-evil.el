@@ -32,11 +32,17 @@
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map
   (kbd "RET") #'aws-lambda-get-function
-  (kbd "q")   #'aws
   (kbd "?")   #'aws-lambda-help-popup
+  (kbd "e")   #'aws-lambda-list-event-source-mappings-from-line-under-cursor
   (kbd "L")   #'aws-lambda-get-latest-logs
   (kbd "l")   #'aws-lambda-describe-log-streams
-  (kbd "P")   #'aws-set-profile)
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws)
+
+;; aws-lambda-event-source-mapping
+(evil-define-key 'normal aws-lambda-event-source-mapping-mode-map
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws-lambda)
 
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map

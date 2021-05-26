@@ -1,5 +1,5 @@
-(require 'evil)
 (require 'aws-core)
+(require 'aws-lambda-event-source-mapping)
 (require 'aws-log-streams)
 (require 'aws-view)
 (require 'transient)
@@ -46,16 +46,18 @@
    ("RET" "Get Function" aws-lambda-get-function)
    ("q" "Service Overview" aws)
    ("l" "Get log streams" aws-lambda-describe-log-streams)
-   ("L" "Get latest logs" aws-lambda-get-latest-logs)])
+   ("L" "Get latest logs" aws-lambda-get-latest-logs)
+   ("P" "Set AWS Profile" aws-set-profile)])
 
 (defvar aws-lambda-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-lambda-get-function)
-    (define-key map (kbd "q") 'aws)
     (define-key map (kbd "?") 'aws-lambda-help-popup)
+    (define-key map (kbd "e") 'aws-lambda-list-event-source-mappings-from-line-under-cursor)
     (define-key map (kbd "l") 'aws-lambda-describe-log-streams)
     (define-key map (kbd "L") 'aws-lambda-get-latest-logs)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "q") 'aws)
     map))
 
 (defun aws-lambda ()
