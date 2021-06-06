@@ -31,7 +31,6 @@
               "' --log-stream-name '" log-stream "'")))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
-    ;; (with-current-buffer buffer (insert cmd))
     (with-current-buffer buffer (aws-view-mode))))
 
 (defvar aws-log-streams-mode-map

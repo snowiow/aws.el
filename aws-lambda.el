@@ -44,10 +44,11 @@
   "AWS Lambda Menu"
   ["Actions"
    ("RET" "Get Function" aws-lambda-get-function)
-   ("q" "Service Overview" aws)
+   ("e" "List Event Sources" aws-lambda-list-event-source-mappings-from-line-under-cursor)
    ("l" "Get log streams" aws-lambda-describe-log-streams)
    ("L" "Get latest logs" aws-lambda-get-latest-logs)
-   ("P" "Set AWS Profile" aws-set-profile)])
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("q" "Service Overview" aws)])
 
 (defvar aws-lambda-mode-map
   (let ((map (make-sparse-keymap)))

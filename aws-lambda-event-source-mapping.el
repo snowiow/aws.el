@@ -1,4 +1,5 @@
 (require 'aws-core)
+(require 'transient)
 
 (defvar-local current-lambda-function-name nil)
 
@@ -28,11 +29,84 @@
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+(defun aws-lambda-get-event-source-mapping ()
+  (interactive)
+  (let* ((uuid (tabulated-list-get-id))
+         (subcmd (concat "lambda get-event-source-mapping --uuid=" uuid))
+         (buffer (concat "*" subcmd "*"))
+         (cmd (concat (aws-cmd) subcmd)))
+    (call-process-shell-command cmd nil buffer)
+    (switch-to-buffer buffer)
+    (with-current-buffer buffer (aws-view-mode))))
+
+(defun aws-lambda-update-event-source-mapping (&optional args)
+  (interactive (list (transient-args 'aws-lambda-update-event-source-mapping-popup)))
+  (let* ((uuid (tabulated-list-get-id))
+         (subcmd
+          (concat
+           "lambda update-event-source-mapping "
+           "--uuid=" uuid " "
+           (mapconcat 'identity args " ")))
+         (buffer (concat "*" subcmd "*"))
+         (cmd (concat (aws-cmd) subcmd)))
+    (call-process-shell-command cmd nil buffer)
+    (switch-to-buffer buffer)
+    (with-current-buffer buffer (aws-view-mode))))
+
+;; transients
+(define-transient-command aws-lambda-event-source-mapping-help-popup ()
+  ["Actions"
+   ("RET" "Get Event Source Mapping" aws-lambda-get-event-source-mapping)
+   ("q" "Lambdas" aws-lambda)
+   ("r" "Refresh Buffer" aws-lambda-event-source-mapping)
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("u" "Update Event Source Mapping" aws-lambda-update-event-source-mapping-popup)])
+
+(transient-define-prefix aws-lambda-update-event-source-mapping-popup ()
+  "AWS Update Event Source Mapping"
+  ["Arguments"
+   ("a" "[integer] (Streams) Discard records older than the specified age. The default value is infinite (-1)" "--maximum-record-age-in-seconds=")
+   (aws-lambda-update-event-source-mapping-bisect)
+   (aws-lambda-update-event-source-mapping-state)
+   ("p" "[integer] (Streams) The number of batches to process from each shard concurrently." "--parallelization-factor=")
+   ("r" "[integer] (Streams) Discard records after the specified number of retries. The default value is infinite (-1). When set to infinite (-1), failed records will be retried until the record expires." "--maximum-retry-attempts=")
+   ("s" "[integer] The maximum number of items to retrieve in a single batch." "--batch-size=")
+   ("t" "[integer] (Streams) The duration in seconds of a processing window. The range is between 1 second up to 900 seconds." "--tumbling-window-in-seconds=")
+   ("w" "[integer] (Streams and SQS standard queues) The maximum amount of time to gather records before invoking the function, in seconds" "--maximum-batching-window-in-seconds=")]
+  ["Update"
+   ("u" "update event source mapping" aws-lambda-update-event-source-mapping)])
+
+(transient-define-argument aws-lambda-update-event-source-mapping-bisect ()
+  :description "[boolean] (Streams) If the function returns an error, split the batch in two and retry"
+  :class 'transient-switches
+  :key "b"
+  :argument-format "--%s"
+  :argument-regexp "\\(no-bisect-batch-on-function-error\\|bisect-batch-on-function-error\\)"
+  :choices '("no-bisect-batch-on-function-error" "bisect-batch-on-function-error"))
+
+(transient-define-argument aws-lambda-update-event-source-mapping-state ()
+  :description "[boolean] Enable or Disable event source mapping"
+  :class 'transient-switches
+  :key "e"
+  :argument-format "%s"
+  :argument-regexp "\\--no-enabled\\|--enabled\\"
+  :choices '("--no-enabled" "--enabled"))
+
+
 (defvar aws-lambda-event-source-mapping-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "q") 'aws-lambda)
-    (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "RET") 'aws-lambda-get-event-source-mapping)
+    (define-key map (kbd "?")   'aws-lambda-event-source-mapping-help-popup)
+    (define-key map (kbd "q")   'aws-lambda)
+    (define-key map (kbd "P")   'aws-set-profile)
+    (define-key map (kbd "r")   'aws-lambda-event-source-mapping-refresh)
+    (define-key map (kbd "u")   'aws-lambda-update-event-source-mapping)
     map))
+
+(defun aws-lambda-event-source-mapping-refresh ()
+  (interactive)
+  (message "Refreshing buffer...")
+  (aws-lambda-event-source-mapping current-lambda-function-name))
 
 (defun aws-lambda-event-source-mapping (lambda-function)
   (interactive "slambda function name: ")

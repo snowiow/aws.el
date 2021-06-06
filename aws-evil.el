@@ -41,8 +41,12 @@
 
 ;; aws-lambda-event-source-mapping
 (evil-define-key 'normal aws-lambda-event-source-mapping-mode-map
+  (kbd "RET") #'aws-lambda-get-event-source-mapping
+  (kbd "?")   #'aws-lambda-event-source-mapping-help-popup
   (kbd "P")   #'aws-set-profile
-  (kbd "q")   #'aws-lambda)
+  (kbd "q")   #'aws-lambda
+  (kbd "r")   #'aws-lambda-event-source-mapping-refresh
+  (kbd "u")   #'aws-lambda-update-event-source-mapping-popup)
 
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map
