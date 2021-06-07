@@ -22,7 +22,8 @@
 ;; aws-mode
 (evil-define-key 'normal aws-mode-map
   (kbd "RET") #'aws-get-service
-  (kbd "P")   #'aws-set-profile)
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws-quit)
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map

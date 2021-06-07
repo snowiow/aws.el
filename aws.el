@@ -30,19 +30,26 @@
           ((equal service "s3") (aws-s3))
           (t (message "Hello")))))
 
+(defun aws-quit ()
+  "Quits the aws major mode by killing all it's open buffers."
+  (interactive)
+  (when (y-or-n-p "Are you sure you want to quit? ")
+    (let* ((buffer-names (mapcar (lambda (x) (buffer-name x)) (buffer-list)))
+           (aws-buffers (seq-filter
+                         (lambda (x) (string-match-p "\\*aws\\.el\s.+\\*" x))
+                         buffer-names)))
+      (dolist (buffer-name aws-buffers)
+        (kill-buffer buffer-name)))))
+
+;; MODE-MAP
 (defvar aws-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-get-service)
     (define-key map (kbd "P")   'aws-set-profile)
+    (define-key map (kbd "q")   'aws-quit)
     map))
 
-;; TODO: move evil stuff into own minor mode to make it optional
-;; (evil-set-initial-state 'aws-mode 'motion)
-
-;; (evil-define-key 'motion aws-mode-map
-;;   (kbd "RET") #'aws-get-service
-;;   (kbd "P")   #'aws-set-profile)
-
+;; MODE DEFINITION
 (defun aws ()
   (interactive)
   (setq aws-current-service "services")
