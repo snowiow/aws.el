@@ -51,10 +51,11 @@
 
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map
-  (kbd "RET") #'aws-log-streams-from-line-under-cursor
-  (kbd "i")   #'aws-logs-describe-log-group
-  (kbd "P")   #'aws-set-profile
-  (kbd "q")   #'aws)
+  (kbd "RET")   #'aws-logs-describe-log-group
+  (kbd "?")     #'aws-logs-help-popup
+  (kbd "P")     #'aws-set-profile
+  (kbd "q")     #'aws
+  (kbd "s")     #'aws-log-streams-from-line-under-cursor)
 
 ;; aws-log-streams
 (evil-define-key 'normal aws-log-streams-mode-map

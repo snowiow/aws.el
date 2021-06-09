@@ -22,10 +22,6 @@
     (tabulated-list-init-header)
     (tabulated-list-print)
     (hl-line-mode 1)))
-  ;; (aws--tabulated-list-from-command
-  ;;  "logs describe-log-groups --output=text --query 'logGroups[*].logGroupName'"
-  ;;  [("Log Groups" 100)]
-  ;;  ))
 
 (defun aws-logs-describe-log-group ()
   (interactive)
@@ -42,12 +38,21 @@
     (with-current-buffer buffer
       (aws-view-mode))))
 
+(define-transient-command aws-logs-help-popup ()
+  "AWS Logs Menu"
+  ["Actions"
+   ("RET" "Describe Log Group" aws-logs-describe-log-group)
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("s" "Get Log Streams" aws-log-streams-from-line-under-cursor)
+   ("q" "Service Overview" aws)])
+
 (defvar aws-logs-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'aws-log-streams-from-line-under-cursor)
-    (define-key map (kbd "i")   'aws-logs-describe-log-group)
+    (define-key map (kbd "RET") 'aws-logs-describe-log-group)
+    (define-key map (kbd "?")   'aws-logs-help-popup)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws)
+    (define-key map (kbd "s")   'aws-log-streams-from-line-under-cursor)
     map))
 
 (defun aws-logs ()

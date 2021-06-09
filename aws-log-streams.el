@@ -41,8 +41,12 @@
     map))
 
 (defun aws-log-streams-from-line-under-cursor ()
+  "Get the Log Streams for the Log Group under the cursor.
+Used from the aws-logs mode."
   (interactive)
-  (let ((log-group-name (string-trim (thing-at-point 'line))))
+  (let ((log-group-name (car
+                         (split-string
+                          (thing-at-point 'line)))))
     (aws-log-streams log-group-name)))
 
 (defun aws-log-streams (log-group-name)
