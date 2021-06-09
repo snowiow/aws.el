@@ -1,19 +1,20 @@
-(defvar aws-current-service nil)
+(defvar aws--current-service nil)
+
 (defvar aws-profile (car
                      (split-string
                       (shell-command-to-string "aws configure list-profiles") "\n")))
 
 (defcustom aws-vault nil
-  "Set if aws-vault should be used for aws sessions"
+  "Set if aws-vault should be used for aws sessions."
   :type 'symbol
   :group 'aws
   :options '('t 'nil))
 
-(fset 'aws-last-view nil)
+(fset 'aws--last-view nil)
 
 (defun aws--buffer-name ()
   "Return aws.el buffer name."
-  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws-current-service) "*"))
+  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws--current-service) "*"))
 
 (defun aws--pop-to-buffer (name)
   (unless (get-buffer name)
@@ -34,7 +35,7 @@
         (completing-read
          "Select profile: "
          (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
-  (aws-last-view))
+  (aws--last-view))
 
 (defun aws--tabulated-list-from-command (cmd header)
   (let ((rows
@@ -50,4 +51,4 @@
     (hl-line-mode 1)))
 
 (provide 'aws-core)
-;;; aws.el ends here
+;;; aws-core.el ends here

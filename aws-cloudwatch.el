@@ -1,24 +1,29 @@
 (require 'aws-core)
 
-(defun aws-cloudwatch-list ()
+;;; Code:
+(defun aws--cloudwatch-list ()
+  "List all CloudWatch services."
   (interactive)
   (let ((rows (list '("alarms" ["alarms"]))))
-    (fset 'aws-last-view 'aws-cloudwatch)
+    (fset 'aws--last-view 'aws-cloudwatch)
     (setq tabulated-list-format [("CloudWatch" 100)])
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+;; MODE-MAP
 (defvar aws-cloudwatch-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     map))
 
+;; MODE DEFINITION
 (defun aws-cloudwatch ()
+  "Open AWS CloudWatch Major Mode.  This presents an overview of CloudWatch subservices."
   (interactive)
-  (setq aws-current-service "cloudwatch")
+  (setq aws--current-service "cloudwatch")
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-cloudwatch-mode))
 
@@ -26,6 +31,7 @@
   "AWS mode"
   (setq major-mode 'aws-cloudwatch-mode)
   (use-local-map aws-cloudwatch-mode-map)
-  (aws-cloudwatch-list))
+  (aws--cloudwatch-list))
 
 (provide 'aws-cloudwatch)
+;;; aws-cloudwatch.el ends here

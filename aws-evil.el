@@ -21,7 +21,7 @@
 
 ;; aws-mode
 (evil-define-key 'normal aws-mode-map
-  (kbd "RET") #'aws-get-service
+  (kbd "RET") #'aws--get-service
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-quit)
 
@@ -42,7 +42,7 @@
 
 ;; aws-lambda-event-source-mapping
 (evil-define-key 'normal aws-lambda-event-source-mapping-mode-map
-  (kbd "RET") #'aws-lambda-get-event-source-mapping
+  (kbd "RET") #'aws--lambda-get-event-source-mapping
   (kbd "?")   #'aws-lambda-event-source-mapping-help-popup
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-lambda
@@ -52,6 +52,7 @@
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map
   (kbd "RET") #'aws-log-streams-from-line-under-cursor
+  (kbd "i")   #'aws-logs-describe-log-group
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws)
 

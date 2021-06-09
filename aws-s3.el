@@ -6,7 +6,7 @@
                           (split-string
                            (shell-command-to-string
                             (concat (aws-cmd) "s3 ls | awk '{print $3}'")) "\n"))))
-    (fset 'aws-last-view 'aws-s3)
+    (fset 'aws--last-view 'aws-s3)
     (setq tabulated-list-format [("Buckets" 100)])
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
@@ -27,7 +27,7 @@
 
 (defun aws-s3 ()
   (interactive)
-  (setq aws-current-service "s3")
+  (setq aws--current-service "s3")
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-s3-mode))
 

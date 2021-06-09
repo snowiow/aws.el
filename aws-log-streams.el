@@ -47,15 +47,16 @@
 
 (defun aws-log-streams (log-group-name)
   (interactive "slog-group name: ")
-  (setq aws-current-service "log-streams")
+  (setq aws--current-service "log-streams")
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-log-streams-mode)
   (setq-local current-log-group-name log-group-name)
   (aws-log-streams-describe-log-streams log-group-name))
 
 (define-derived-mode aws-log-streams-mode tabulated-list-mode "aws log-streams"
-  "AWS mode"
+  "AWS Log Stream Mode"
   (setq major-mode 'aws-log-streams-mode)
   (use-local-map aws-log-streams-mode-map))
 
 (provide 'aws-log-streams)
+;;; aws-log-streams.el ends here

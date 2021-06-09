@@ -4,25 +4,27 @@
 (require 'aws-logs)
 (require 'aws-s3)
 
-(defun aws-list-services ()
+;;; Code:
+(defun aws--list-services ()
   "List available aws services."
   (interactive)
   (let ((rows (list '("cloudwatch" ["cloudwatch"])
                     '("lambda" ["lambda"])
                     '("logs" ["logs"])
                     '("s3" ["s3"]))))
-    (fset 'aws-last-view 'aws)
+    (fset 'aws--last-view 'aws)
     (setq tabulated-list-format [("Services" 100)])
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws-get-service ()
+(defun aws--get-service ()
+  "Call the respective aws service view, based on the current tabulated-list entry."
   (interactive)
   (let ((service (if (tabulated-list-get-entry)
                      (aref (tabulated-list-get-entry) 0)
-                   aws-current-service)))
+                   aws--current-service)))
     (cond ((equal service "cloudwatch") (aws-cloudwatch))
           ((equal service "services") (aws))
           ((equal service "lambda") (aws-lambda))
@@ -44,15 +46,16 @@
 ;; MODE-MAP
 (defvar aws-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'aws-get-service)
+    (define-key map (kbd "RET") 'aws--get-service)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-quit)
     map))
 
 ;; MODE DEFINITION
 (defun aws ()
+  "Open AWS Major Mode.  This presents a service overview."
   (interactive)
-  (setq aws-current-service "services")
+  (setq aws--current-service "services")
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-mode))
 
@@ -60,7 +63,7 @@
   "AWS mode"
   (setq major-mode 'aws-mode)
   (use-local-map aws-mode-map)
-  (aws-list-services))
+  (aws--list-services))
 
 (provide 'aws)
 ;;; aws.el ends here

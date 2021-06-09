@@ -4,15 +4,18 @@
 (require 'aws-view)
 (require 'transient)
 
-(defun aws-lambda-list-functions ()
-  (fset 'aws-last-view 'aws-lambda)
+(defun aws--lambda-list-functions ()
+  "List all Lambda Functions."
+  (fset 'aws--last-view 'aws-lambda)
   (aws--tabulated-list-from-command
    "lambda list-functions --output=text --query 'Functions[*].FunctionName'"
    [("Functions" 100)]))
 
 (defun aws-lambda-get-function ()
+  "Describe the Lambda Function under the cursor.
+This function is used in the AWS Lambda Mode."
   (interactive)
-  (let* ((buffer "*lambda-info*")
+  (let* ((buffer "*aws.el: lambda-info*")
         (function-name (aref (tabulated-list-get-entry) 0))
         (function-desc-cmd
          (concat (aws-cmd) "lambda get-function --output yaml --function-name " function-name)))
@@ -22,11 +25,13 @@
       (aws-view-mode))))
 
 (defun aws-lambda-get-latest-logs ()
+  "Get the latest logs of the Lambda Function under the cursor.
+This function is used in the AWS Lambda Mode."
   (interactive)
   (let* ((function-name (aref (tabulated-list-get-entry) 0))
          (log-group-name (concat "/aws/lambda/" function-name))
          (latest-log-stream
-          (car 
+          (car
           (split-string
            (shell-command-to-string
             (concat
@@ -35,6 +40,8 @@
     (aws-log-get-log-events log-group-name latest-log-stream)))
 
 (defun aws-lambda-describe-log-streams ()
+  "List all log streams for the Lambda Function under the cursor.
+This functions is used in the AWS Lambda Mode."
   (interactive)
   (let* ((function-name (aref (tabulated-list-get-entry) 0))
          (log-group-name (concat "/aws/lambda/" function-name)))
@@ -62,8 +69,9 @@
     map))
 
 (defun aws-lambda ()
+  "Open the AWS Lambda Mode."
   (interactive)
-  (setq aws-current-service "lambda")
+  (setq aws--current-service "lambda")
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-lambda-mode))
 
@@ -71,6 +79,7 @@
   "AWS mode"
   (setq major-mode 'aws-lambda-mode)
   (use-local-map aws-lambda-mode-map)
-  (aws-lambda-list-functions))
+  (aws--lambda-list-functions))
 
 (provide 'aws-lambda)
+;;; aws-lambda.el ends here
