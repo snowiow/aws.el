@@ -75,7 +75,7 @@ This functions is used in the AWS Lambda Mode."
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-lambda-mode))
 
-(define-derived-mode aws-lambda-mode tabulated-list-mode "aws lambda"
+(define-derived-mode aws-lambda-mode tabulated-list-mode "aws-lambda"
   "AWS mode"
   (setq major-mode 'aws-lambda-mode)
   (use-local-map aws-lambda-mode-map)

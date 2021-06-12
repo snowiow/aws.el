@@ -8,7 +8,7 @@
 ;; (evil-define-key 'motion aws-view-mode-map
 ;;   (kbd "q") #'kill-current-buffer)
 
-(define-derived-mode aws-view-mode fundamental-mode "aws view"
+(define-derived-mode aws-view-mode fundamental-mode "aws-view"
   "AWS mode"
   (setq major-mode 'aws-view-mode)
   (use-local-map aws-view-mode-map)

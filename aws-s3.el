@@ -31,7 +31,7 @@
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-s3-mode))
 
-(define-derived-mode aws-s3-mode tabulated-list-mode "aws s3"
+(define-derived-mode aws-s3-mode tabulated-list-mode "aws-s3"
   "AWS mode"
   (setq major-mode 'aws-s3-mode)
   (use-local-map aws-s3-mode-map)

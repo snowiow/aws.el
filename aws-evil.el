@@ -27,8 +27,18 @@
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map
+  (kbd "RET") #'aws-cloudwatch-alarms
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws)
+
+;; aws-cloudwatch-alarms-mode
+(evil-define-key 'normal aws-cloudwatch-alarms-mode-map
+  (kbd "RET") #'aws-cloudwatch-describe-alarm
+  (kbd "?")   #'aws-cloudwatch-alarms-help-popup
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws-cloudwatch
+  (kbd "r")   #'aws-cloudwatch-describe-alarms
+  (kbd "t")   #'aws-cloudwatch-enable-disable-alarm)
 
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map

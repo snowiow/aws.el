@@ -57,7 +57,7 @@ Used from the aws-logs mode."
   (setq-local current-log-group-name log-group-name)
   (aws-log-streams-describe-log-streams log-group-name))
 
-(define-derived-mode aws-log-streams-mode tabulated-list-mode "aws log-streams"
+(define-derived-mode aws-log-streams-mode tabulated-list-mode "aws-log-streams"
   "AWS Log Stream Mode"
   (setq major-mode 'aws-log-streams-mode)
   (use-local-map aws-log-streams-mode-map))

@@ -14,8 +14,7 @@
                         (shell-command-to-string
                          (concat
                           (aws-cmd)
-                          "logs describe-log-groups --output=text --query 'logGroups[*].[logGroupName,storedBytes,retentionInDays,metricFilterCount]' --output text")) "\n"))))
-         (column-width (longest-element (mapcar 'car rows))))
+                          "logs describe-log-groups --output=text --query 'logGroups[*].[logGroupName,storedBytes,retentionInDays,metricFilterCount]' --output text")) "\n")))))
     ;; (message column-width)))
     (setq tabulated-list-format [("LogGroupName" 85) ("Stored Bytes" 15) ("Retention" 10) ("Metric Filters" 5) ])
     (setq tabulated-list-entries rows)
@@ -25,18 +24,10 @@
 
 (defun aws-logs-describe-log-group ()
   (interactive)
-  (let* ((current-log-group (aref (tabulated-list-get-entry) 0))
-         (buffer (concat "*aws.el [log-group info]:" current-log-group "*"))
-         (cmd (concat
-               (aws-cmd)
-               "logs describe-log-groups"
-               " --log-group-name-prefix " current-log-group
-               " --query 'logGroups[0]'"
-               " --output yaml")))
-    (call-process-shell-command cmd nil buffer)
-    (switch-to-buffer buffer)
-    (with-current-buffer buffer
-      (aws-view-mode))))
+  (let ((cmd (concat "logs describe-log-groups"
+                    " --query 'logGroups[0]'"
+                    " --log-group-name-prefix")))
+    (aws--describe-current-resource cmd)))
 
 (define-transient-command aws-logs-help-popup ()
   "AWS Logs Menu"
@@ -61,7 +52,7 @@
   (aws--pop-to-buffer (aws--buffer-name))
   (aws-logs-mode))
 
-(define-derived-mode aws-logs-mode tabulated-list-mode "aws logs"
+(define-derived-mode aws-logs-mode tabulated-list-mode "aws-logs"
   "AWS mode"
   (setq major-mode 'aws-logs-mode)
   (use-local-map aws-logs-mode-map)

@@ -17,16 +17,19 @@
   (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws--current-service) "*"))
 
 (defun aws--pop-to-buffer (name)
+  "Create a buffer with NAME if not exists and switch to it."
   (unless (get-buffer name)
     (get-buffer-create name))
     (pop-to-buffer-same-window name))
 
 (defun aws-cmd ()
+  "Create the AWS base cmd with the right profile.
+Use either aws-vault exec or --profile based on setting."
   (if aws-vault
       (concat "aws-vault exec "
               aws-profile
               " -- aws ")
-    "aws "))
+    (concat "aws --profile " aws-profile)))
 
 (defun aws-set-profile ()
   "Set active AWS Profile."
@@ -49,6 +52,16 @@
     (tabulated-list-init-header)
     (tabulated-list-print)
     (hl-line-mode 1)))
+
+(defun aws--describe-current-resource (cmd)
+  "Describe resource under cursor.  CMD is the aws command to describe the resource."
+  (let* ((current-resource (tabulated-list-get-id))
+         (buffer (concat "*aws.el [" aws--current-service "]: " current-resource "*"))
+         (cmd (concat (aws-cmd) "--output yaml " cmd " " current-resource)))
+    (call-process-shell-command cmd nil buffer)
+    (switch-to-buffer buffer)
+    (with-current-buffer buffer
+      (aws-view-mode))))
 
 (provide 'aws-core)
 ;;; aws-core.el ends here
