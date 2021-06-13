@@ -45,8 +45,10 @@
   (kbd "RET") #'aws-lambda-get-function
   (kbd "?")   #'aws-lambda-help-popup
   (kbd "e")   #'aws-lambda-list-event-source-mappings-from-line-under-cursor
+  (kbd "i")   #'aws-lambda-invoke-popup
   (kbd "L")   #'aws-lambda-get-latest-logs
   (kbd "l")   #'aws-lambda-describe-log-streams
+  (kbd "o")   #'aws-lambda-view-last-execution
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws)
 
