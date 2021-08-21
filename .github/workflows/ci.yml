@@ -1,0 +1,16 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v1
+    - uses: purcell/setup-emacs@v3.0
+      with:
+        version: 27.2
+    - uses: leotaku/elisp-check@v1.1
+      with:
+        check: ert
+        file: "test/*-test.el"
