@@ -5,6 +5,7 @@
 ;;; Code:
 
 (require 'ert)
+(require 'aws-core)
 
 (ert-deftest aws--test-buffer-name ()
   (let ((aws-profile "default")
