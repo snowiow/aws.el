@@ -25,6 +25,14 @@
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-quit)
 
+;; aws-cloudformation-mode
+(evil-define-key 'normal aws-cloudformation-mode-map
+  (kbd "?") #'aws-cloudformation-help-popup
+  (kbd "d") #'aws--cloudformation-delete-stack
+  (kbd "P") #'aws-set-profile
+  (kbd "q") #'aws
+  (kbd "r") #'aws--cloudformation-list-stacks-refresh)
+
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map
   (kbd "RET") #'aws-cloudwatch-alarms
@@ -39,11 +47,6 @@
   (kbd "q")   #'aws-cloudwatch
   (kbd "r")   #'aws-cloudwatch-describe-alarms
   (kbd "t")   #'aws-cloudwatch-enable-disable-alarm)
-
-(evil-define-key 'normal aws-cloudformation-mode-map
-  (kbd "?") #'aws-cloudformation-help-popup
-  (kbd "P") #'aws-set-profile
-  (kbd "q") #'aws)
 
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map

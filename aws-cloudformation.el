@@ -4,8 +4,10 @@
 ; TODO: When https://github.com/aws/aws-cli/issues/6189 gets intgrated, this list can be inverted. This would end up in just one item
 (defvar aws--cloudformation-stack-status-filter "CREATE_IN_PROGRESS CREATE_FAILED CREATE_COMPLETE ROLLBACK_IN_PROGRESS ROLLBACK_FAILED ROLLBACK_COMPLETE DELETE_IN_PROGRESS DELETE_FAILED UPDATE_IN_PROGRESS UPDATE_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_COMPLETE UPDATE_ROLLBACK_IN_PROGRESS UPDATE_ROLLBACK_FAILED UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_ROLLBACK_COMPLETE REVIEW_IN_PROGRESS IMPORT_IN_PROGRESS IMPORT_COMPLETE IMPORT_ROLLBACK_IN_PROGRESS IMPORT_ROLLBACK_FAILED IMPORT_ROLLBACK_COMPLETE")
 
-(defun aws--cloudformation-list-stacks ()
-  "List all CloudFormation Stacks."
+(defun aws--cloudformation-list-stacks (&optional pos)
+  "List all CloudFormation Stacks.
+If POS is set, jump to that line in the view."
+  (interactive)
   (fset 'aws--last-view 'aws-cloudformation)
   (let* ((shell-cmd (concat
               (aws-cmd)
@@ -25,13 +27,49 @@
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
     (tabulated-list-print)
-    (hl-line-mode 1)))
+    (hl-line-mode 1)
+    (when (numberp pos)
+      (goto-line pos))))
+
+(defun aws--cloudformation-list-stacks-refresh ()
+  "Refresh the CloudFormation Stacks Overview and jump to the last position."
+  (interactive)
+  (message "Refreshing buffer...")
+  (let ((current-line (+ 1 (count-lines 1 (point)))))
+    (aws--cloudformation-list-stacks current-line)))
+
+(defun aws--cloudformation-delete-stack ()
+  "Delete the CloudFormation Stack under the cursor."
+  (interactive)
+  (let ((stack-name (tabulated-list-get-id)))
+    (when (y-or-n-p (concat
+                     "Are you sure you want to delete the stack "
+                     stack-name
+                     "?"))
+      (let* ((sub-cmd (concat
+                       "cloudformation delete-stack "
+                       "--stack-name " stack-name))
+             (cmd (concat (aws-cmd) sub-cmd)))
+        (shell-command cmd)
+        (aws--cloudformation-list-stacks-refresh)
+        (message (concat "Triggered deletion on stack " stack-name))))))
+
+;; TRANSIENTS
+(define-transient-command aws-cloudformation-help-popup ()
+  "AWS CloudFormation Menu"
+  ["Actions"
+   ("d" "Delete Stack" aws--cloudformation-delete-stack)
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("q" "Service Overview" aws)
+   ("r" "Refresh Buffer" aws--cloudformation-list-stacks-refresh)])
 
 (defvar aws-cloudformation-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "?") 'aws-cloudformation-help-popup)
+    (define-key map (kbd "d") 'aws--cloudformation-delete-stack)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
+    (define-key map (kbd "r") 'aws--cloudformation-list-stacks-refresh)
     map))
 
 (defun aws-cloudformation ()
