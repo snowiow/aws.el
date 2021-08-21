@@ -4,6 +4,7 @@
 (require 'aws-view)
 (require 'transient)
 
+;;; Code:
 (defun aws--lambda-list-functions ()
   "List all Lambda Functions."
   (fset 'aws--last-view 'aws-lambda)
@@ -135,7 +136,7 @@ ARGS represent the arguments set in the transient."
   (aws-lambda-mode))
 
 (define-derived-mode aws-lambda-mode tabulated-list-mode "aws-lambda"
-  "AWS mode"
+  "AWS Lambda mode"
   (setq major-mode 'aws-lambda-mode)
   (use-local-map aws-lambda-mode-map)
   (aws--lambda-list-functions))

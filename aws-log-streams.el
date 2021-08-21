@@ -1,5 +1,6 @@
 (require 'aws-core)
 
+;;; Code:
 (defvar-local current-log-group-name nil)
 
 (defun aws-log-streams-get-latest-logs-command (log-group-name &optional count)

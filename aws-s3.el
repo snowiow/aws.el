@@ -1,6 +1,7 @@
 (require 'evil)
 (require 'aws-core)
 
+;;; Code:
 (defun aws-s3-lb ()
   (let ((rows (mapcar (lambda (x) `(nil [,x]))
                           (split-string

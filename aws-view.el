@@ -1,3 +1,4 @@
+;;; Code:
 (defvar aws-view-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'kill-current-buffer)

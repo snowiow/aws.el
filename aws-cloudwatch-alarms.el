@@ -1,5 +1,6 @@
 (require 'aws-core)
 
+;;; Code:
 (defun aws-cloudwatch-describe-alarms ()
   "List all CloudWatch Alarms."
   (interactive)
