@@ -1,7 +1,11 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+;;; Code:
 (require 'aws-core)
 (require 'aws-cloudwatch-alarms)
 
-;;; Code:
 (defun aws--cloudwatch-list ()
   "List all CloudWatch services."
   (interactive)

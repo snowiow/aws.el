@@ -1,10 +1,12 @@
 ;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
 
 ;;; Commentary:
 
 ;;; Code:
 (require 'aws-core)
 (require 'transient)
+
 ; TODO: When https://github.com/aws/aws-cli/issues/6189 gets intgrated, this list can be inverted. This would end up in just one item
 (defvar aws--cloudformation-stack-status-filter "CREATE_IN_PROGRESS CREATE_FAILED CREATE_COMPLETE ROLLBACK_IN_PROGRESS ROLLBACK_FAILED ROLLBACK_COMPLETE DELETE_IN_PROGRESS DELETE_FAILED UPDATE_IN_PROGRESS UPDATE_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_COMPLETE UPDATE_ROLLBACK_IN_PROGRESS UPDATE_ROLLBACK_FAILED UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_ROLLBACK_COMPLETE REVIEW_IN_PROGRESS IMPORT_IN_PROGRESS IMPORT_COMPLETE IMPORT_ROLLBACK_IN_PROGRESS IMPORT_ROLLBACK_FAILED IMPORT_ROLLBACK_COMPLETE")
 
@@ -59,7 +61,7 @@ If POS is set, jump to that line in the view."
         (message (concat "Triggered deletion on stack " stack-name))))))
 
 ;; TRANSIENTS
-(define-transient-command aws-cloudformation-help-popup ()
+(transient-define-prefix aws-cloudformation-help-popup ()
   "AWS CloudFormation Menu"
   ["Actions"
    ("d" "Delete Stack" aws--cloudformation-delete-stack)

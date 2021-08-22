@@ -1,3 +1,9 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
 (require 'evil)
 (require 'aws)
 (require 'aws-core)
@@ -93,5 +99,4 @@
   (kbd "q") #'kill-current-buffer)
 
 (provide 'aws-evil)
-
 ;;; aws-evil.el ends here

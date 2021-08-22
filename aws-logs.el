@@ -1,8 +1,13 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
 (require 'aws-core)
 (require 'aws-utils)
 (require 'aws-log-streams)
 
-;;; Code:
 (defun aws--logs-describe-log-groups ()
   "List all log groups by it's names."
   (fset 'aws--last-view 'aws-logs)
@@ -29,7 +34,7 @@
                     " --log-group-name-prefix")))
     (aws--describe-current-resource cmd)))
 
-(define-transient-command aws-logs-help-popup ()
+(transient-define-prefix aws-logs-help-popup ()
   "AWS Logs Menu"
   ["Actions"
    ("RET" "Describe Log Group" aws-logs-describe-log-group)

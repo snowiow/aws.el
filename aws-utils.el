@@ -1,3 +1,8 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
 ;;; Code:
 (defun longest-element (list)
   "Return the longest element in a LIST of strings.

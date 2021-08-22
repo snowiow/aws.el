@@ -1,10 +1,15 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
 (require 'aws-core)
 (require 'aws-lambda-event-source-mapping)
 (require 'aws-log-streams)
 (require 'aws-view)
 (require 'transient)
 
-;;; Code:
 (defun aws--lambda-list-functions ()
   "List all Lambda Functions."
   (fset 'aws--last-view 'aws-lambda)
@@ -76,7 +81,7 @@ ARGS represent the arguments set in the transient."
     (switch-to-buffer (find-file-other-window outfile-path))))
 
 ;; TRANSIENTS
-(define-transient-command aws-lambda-help-popup ()
+(transient-define-prefix aws-lambda-help-popup ()
   "AWS Lambda Menu"
   ["Actions"
    ("RET" "Get Function" aws-lambda-get-function)

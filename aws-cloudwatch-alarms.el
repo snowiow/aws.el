@@ -1,6 +1,11 @@
-(require 'aws-core)
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
 
 ;;; Code:
+(require 'aws-core)
+
 (defun aws-cloudwatch-describe-alarms ()
   "List all CloudWatch Alarms."
   (interactive)
@@ -63,7 +68,7 @@ Disable if it's enabled and enable if it's disabled."
     (goto-line current-line)
     (message (concat "Executed " action " successfully on " current-alarm))))
 
-(define-transient-command aws-cloudwatch-alarms-help-popup ()
+(transient-define-prefix aws-cloudwatch-alarms-help-popup ()
   "AWS CloudWatch Alarm Menu"
   ["Actions"
    ("RET" "Describe Alarm"      aws-cloudwatch-describe-alarm)

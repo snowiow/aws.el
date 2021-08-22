@@ -1,7 +1,12 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
 (require 'evil)
 (require 'aws-core)
 
-;;; Code:
 (defun aws-s3-lb ()
   (let ((rows (mapcar (lambda (x) `(nil [,x]))
                           (split-string
@@ -39,3 +44,4 @@
   (aws-s3-lb))
 
 (provide 'aws-s3)
+;;; aws-s3.el ends here

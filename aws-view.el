@@ -1,3 +1,8 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
 ;;; Code:
 (defvar aws-view-mode-map
   (let ((map (make-sparse-keymap)))
@@ -11,3 +16,4 @@
   (view-mode))
 
 (provide 'aws-view)
+;;; aws-view.el ends here

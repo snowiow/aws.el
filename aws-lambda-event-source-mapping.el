@@ -1,7 +1,12 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
 (require 'aws-core)
 (require 'transient)
 
-;;; Code:
 (defvar-local current-lambda-function-name nil)
 
 (defun aws-lambda-list-event-source-mappings-from-line-under-cursor ()
@@ -64,7 +69,7 @@ ARGS represent the arguments set in the transient."
     (with-current-buffer buffer (aws-view-mode))))
 
 ;; TRANSIENTS
-(define-transient-command aws-lambda-event-source-mapping-help-popup ()
+(transient-define-prefix aws-lambda-event-source-mapping-help-popup ()
   ["Actions"
    ("RET" "Get Event Source Mapping" aws--lambda-get-event-source-mapping)
    ("q" "Lambdas" aws-lambda)

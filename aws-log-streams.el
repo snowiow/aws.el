@@ -1,6 +1,11 @@
-(require 'aws-core)
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
 
 ;;; Code:
+(require 'aws-core)
+
 (defvar-local current-log-group-name nil)
 
 (defun aws-log-streams-get-latest-logs-command (log-group-name &optional count)

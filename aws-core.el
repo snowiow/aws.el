@@ -1,3 +1,11 @@
+;;; package --- Summary
+;; Package-Requires: ((emacs "24.3"))
+
+;;; Commentary:
+
+;;; Code:
+(require 'aws-view)
+
 (defvar aws--current-service nil)
 
 (defvar aws-profile (car
