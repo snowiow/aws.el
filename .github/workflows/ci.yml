@@ -1,12 +1,28 @@
 name: CI
 
-on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+on: push
 
 jobs:
+  lint:
+    strategy:
+      matrix:
+        elisp-check:
+          - load-file
+          - byte-compile
+          - melpa
+          - package-lint
+          - checkdoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: purcell/setup-emacs@v3.0
+        with:
+          version: 27.2
+      - name: run linter
+        uses: leotaku/elisp-check@v1.1
+        with:
+          check: ${{ matrix.elisp-check }}
+          file: "*.el"
   test:
     runs-on: ubuntu-latest
     steps:
@@ -14,7 +30,8 @@ jobs:
       - uses: purcell/setup-emacs@v3.0
         with:
           version: 27.2
-      - uses: leotaku/elisp-check@v1.1
+      - name: run tests
+        uses: leotaku/elisp-check@v1.1
         with:
           check: ert
           file: "test/*-test.el"
