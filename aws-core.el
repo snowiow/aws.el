@@ -56,7 +56,7 @@ Use either aws-vault exec or --profile based on setting."
 (defun aws--describe-current-resource (cmd)
   "Describe resource under cursor.  CMD is the aws command to describe the resource."
   (let* ((current-resource (tabulated-list-get-id))
-         (buffer (concat "*aws.el [" aws--current-service "]: " current-resource "*"))
+         (buffer (concat (aws--buffer-name) ": " cmd " " current-resource "*"))
          (cmd (concat (aws-cmd) "--output yaml " cmd " " current-resource)))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)

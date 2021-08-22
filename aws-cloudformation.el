@@ -38,6 +38,11 @@ If POS is set, jump to that line in the view."
   (let ((current-line (+ 1 (count-lines 1 (point)))))
     (aws--cloudformation-list-stacks current-line)))
 
+(defun aws--cloudformation-describe-stack-events ()
+  "Describe the CloudFormation Stack Events of the Stack under the cursor."
+  (interactive)
+  (aws--describe-current-resource "cloudformation describe-stack-events --stack-name"))
+
 (defun aws--cloudformation-delete-stack ()
   "Delete the CloudFormation Stack under the cursor."
   (interactive)
@@ -54,11 +59,12 @@ If POS is set, jump to that line in the view."
         (aws--cloudformation-list-stacks-refresh)
         (message (concat "Triggered deletion on stack " stack-name))))))
 
-;; TRANSIENTS
+;; TRANSIENTS:
 (define-transient-command aws-cloudformation-help-popup ()
   "AWS CloudFormation Menu"
   ["Actions"
    ("d" "Delete Stack" aws--cloudformation-delete-stack)
+   ("e" "Describe Stack Events" aws--cloudformation-describe-stack-events)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws)
    ("r" "Refresh Buffer" aws--cloudformation-list-stacks-refresh)])
@@ -67,6 +73,7 @@ If POS is set, jump to that line in the view."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "?") 'aws-cloudformation-help-popup)
     (define-key map (kbd "d") 'aws--cloudformation-delete-stack)
+    (define-key map (kbd "e") 'aws--cloudformation-describe-stack-events)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "r") 'aws--cloudformation-list-stacks-refresh)
