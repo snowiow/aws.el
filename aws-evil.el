@@ -35,6 +35,7 @@
 (evil-define-key 'normal aws-cloudformation-mode-map
   (kbd "?") #'aws-cloudformation-help-popup
   (kbd "d") #'aws--cloudformation-delete-stack
+  (kbd "e") #'aws--cloudformation-describe-stack-events
   (kbd "P") #'aws-set-profile
   (kbd "q") #'aws
   (kbd "r") #'aws--cloudformation-list-stacks-refresh)
