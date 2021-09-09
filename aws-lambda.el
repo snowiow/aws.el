@@ -1,19 +1,42 @@
-;;; package --- Summary
-;; Package-Requires: ((emacs "24.3"))
+;;; aws-lambda.el --- Emacs major modes wrapping the AWS CLI
+
+;; Copyright (C) 2021, Marcel Patzwahl
+
+;; This file is NOT part of Emacs.
+
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
+
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
+
+;; Version: 1.0
+;; Author: Marcel Patzwahl
+;; Keywords: aws cli tools
+;; URL: https://github.com/snowiow/aws.el
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
 
+;; Emacs major modes wrapping the AWS CLI
+
 ;;; Code:
-(require 'aws-core)
-(require 'aws-lambda-event-source-mapping)
-(require 'aws-log-streams)
-(require 'aws-view)
 (require 'transient)
 
-(defun aws--lambda-list-functions ()
+(defun aws-lambda--list-functions ()
   "List all Lambda Functions."
   (fset 'aws--last-view 'aws-lambda)
-  (aws--tabulated-list-from-command
+  (aws-core--tabulated-list-from-command
    "lambda list-functions --output=text --query 'Functions[*].FunctionName'"
    [("Functions" 100)]))
 
@@ -58,7 +81,7 @@ This functions is used in the AWS Lambda Mode."
 ARGS represent the arguments set in the transient."
   (interactive (list (transient-args 'aws-lambda-invoke-popup)))
   (let* ((function-name (aref (tabulated-list-get-entry) 0))
-         (outfile-path (lambda-tmp-outfile function-name))
+         (outfile-path (aws-lambda--tmp-outfile function-name))
          (subcmd
           (concat
            "lambda invoke --function-name "
@@ -71,13 +94,13 @@ ARGS represent the arguments set in the transient."
     (switch-to-buffer buffer)
     (with-current-buffer buffer (aws-view-mode))))
 
-(defun lambda-tmp-outfile (function-name)
+(defun aws-lambda--tmp-outfile (function-name)
   (concat "/tmp/aws-el-lambda-" function-name "-output.json"))
 
 (defun aws-lambda-view-last-execution ()
   (interactive)
   (let* ((function-name (aref (tabulated-list-get-entry) 0))
-         (outfile-path (lambda-tmp-outfile function-name)))
+         (outfile-path (aws-lambda--tmp-outfile function-name)))
     (switch-to-buffer (find-file-other-window outfile-path))))
 
 ;; TRANSIENTS
@@ -85,7 +108,7 @@ ARGS represent the arguments set in the transient."
   "AWS Lambda Menu"
   ["Actions"
    ("RET" "Get Function" aws-lambda-get-function)
-   ("e" "List Event Sources" aws-lambda-list-event-source-mappings-from-line-under-cursor)
+   ("e" "List Event Sources" aws-lambda-event-source-mapping-list-from-line-under-cursor)
    ("i" "Invoke Function" aws-lambda-invoke-popup)
    ("l" "Get log streams" aws-lambda-describe-log-streams)
    ("L" "Get latest logs" aws-lambda-get-latest-logs)
@@ -124,7 +147,7 @@ ARGS represent the arguments set in the transient."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-lambda-get-function)
     (define-key map (kbd "?") 'aws-lambda-help-popup)
-    (define-key map (kbd "e") 'aws-lambda-list-event-source-mappings-from-line-under-cursor)
+    (define-key map (kbd "e") 'aws-lambda-event-source-mapping-list-from-line-under-cursor)
     (define-key map (kbd "i") 'aws-lambda-invoke-popup)
     (define-key map (kbd "l") 'aws-lambda-describe-log-streams)
     (define-key map (kbd "L") 'aws-lambda-get-latest-logs)
@@ -144,7 +167,7 @@ ARGS represent the arguments set in the transient."
   "AWS Lambda mode"
   (setq major-mode 'aws-lambda-mode)
   (use-local-map aws-lambda-mode-map)
-  (aws--lambda-list-functions))
+  (aws-lambda--list-functions))
 
 (provide 'aws-lambda)
 ;;; aws-lambda.el ends here

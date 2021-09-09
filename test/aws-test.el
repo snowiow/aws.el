@@ -3,9 +3,8 @@
 ;;; Commentary:
 
 ;;; Code:
-
 (require 'ert)
-(require 'aws-core)
+(require 'aws-mode)
 
 (ert-deftest aws--test-buffer-name ()
   (let ((aws-profile "default")
@@ -13,4 +12,4 @@
     (should (equal "*aws.el [profile: default] [service: lambda]*" (aws--buffer-name)))))
 
 (provide 'aws-core-test)
-;;; aws-core-test.el ends here
+;;; aws-test.el ends here

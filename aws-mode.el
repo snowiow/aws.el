@@ -1,4 +1,4 @@
-;;; aws.el --- Emacs major modes wrapping the AWS CLI
+;;; aws-mode.el --- Emacs major modes wrapping the AWS CLI
 
 ;; Copyright (C) 2021, Marcel Patzwahl
 
@@ -21,25 +21,72 @@
 
 ;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli
+;; Keywords: aws cli tools
 ;; URL: https://github.com/snowiow/aws.el
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
 
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
-(require 'aws-cloudformation)
-(require 'aws-cloudwatch)
-(require 'aws-core)
-(require 'aws-lambda)
-(require 'aws-logs)
 (require 'aws-s3)
 
-;;; Code:
-(defun aws--list-services ()
+(defvar aws--current-service nil)
+
+(defvar aws-profile (car
+                     (split-string
+                      (shell-command-to-string "aws configure list-profiles") "\n")))
+
+(defcustom aws-vault nil
+  "Set if aws-vault should be used for aws sessions."
+  :type 'symbol
+  :group 'aws
+  :options '('t 'nil))
+
+(fset 'aws--last-view nil)
+
+(defun aws--buffer-name ()
+  "Return aws.el buffer name."
+  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws--current-service) "*"))
+
+(defun aws--pop-to-buffer (name)
+  "Create a buffer with NAME if not exists and switch to it."
+  (unless (get-buffer name)
+    (get-buffer-create name))
+    (pop-to-buffer-same-window name))
+
+(defun aws-cmd ()
+  "Create the AWS base cmd with the right profile.
+Use either aws-vault exec or --profile based on setting."
+  (if aws-vault
+      (concat "aws-vault exec "
+              aws-profile
+              " -- aws ")
+    (concat "aws --profile " aws-profile)))
+
+(defun aws-set-profile ()
+  "Set active AWS Profile."
+  (interactive)
+  (setq aws-profile
+        (completing-read
+         "Select profile: "
+         (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
+  (aws--last-view))
+
+(defun aws-quit ()
+  "Quits the aws major mode by killing all it's open buffers."
+  (interactive)
+  (when (y-or-n-p "Are you sure you want to quit? ")
+    (let* ((buffer-names (mapcar (lambda (x) (buffer-name x)) (buffer-list)))
+           (aws-buffers (seq-filter
+                         (lambda (x) (string-match-p "\\*aws\\.el\s.+\\*" x))
+                         buffer-names)))
+      (dolist (buffer-name aws-buffers)
+        (kill-buffer buffer-name)))))
+
+(defun aws-services--list ()
   "List available aws services."
   (interactive)
   (let ((rows (list '("cloudformation" ["cloudformation"])
@@ -54,7 +101,7 @@
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws--get-service ()
+(defun aws-services--get-service ()
   "Call the respective aws service view, based on the current tabulated-list entry."
   (interactive)
   (let ((service (if (tabulated-list-get-entry)
@@ -68,21 +115,10 @@
           ((equal service "s3") (aws-s3))
           (t (message "Hello")))))
 
-(defun aws-quit ()
-  "Quits the aws major mode by killing all it's open buffers."
-  (interactive)
-  (when (y-or-n-p "Are you sure you want to quit? ")
-    (let* ((buffer-names (mapcar (lambda (x) (buffer-name x)) (buffer-list)))
-           (aws-buffers (seq-filter
-                         (lambda (x) (string-match-p "\\*aws\\.el\s.+\\*" x))
-                         buffer-names)))
-      (dolist (buffer-name aws-buffers)
-        (kill-buffer buffer-name)))))
-
 ;; MODE-MAP
-(defvar aws-mode-map
+(defvar aws-services-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'aws--get-service)
+    (define-key map (kbd "RET") 'aws--services-get-service)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-quit)
     map))
@@ -98,8 +134,8 @@
 (define-derived-mode aws-mode tabulated-list-mode "aws"
   "AWS mode"
   (setq major-mode 'aws-mode)
-  (use-local-map aws-mode-map)
-  (aws--list-services))
+  (use-local-map aws-services-mode-map)
+  (aws-services--list-services))
 
-(provide 'aws)
-;;; aws.el ends here
+(provide 'aws-mode)
+;;; aws-mode.el ends here

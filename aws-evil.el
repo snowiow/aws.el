@@ -1,15 +1,37 @@
-;;; package --- Summary
-;; Package-Requires: ((emacs "24.3"))
+;;; aws-evil.el --- Emacs major modes wrapping the AWS CLI
+
+;; Copyright (C) 2021, Marcel Patzwahl
+
+;; This file is NOT part of Emacs.
+
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
+
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
+
+;; Version: 1.0
+;; Author: Marcel Patzwahl
+;; Keywords: aws cli tools
+;; URL: https://github.com/snowiow/aws.el
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
 
+;; Emacs major modes wrapping the AWS CLI
+
 ;;; Code:
 (require 'evil)
-(require 'aws)
-(require 'aws-core)
-(require 'aws-s3)
-(require 'aws-lambda)
-(require 'aws-view)
 
 (defgroup aws-evil nil
   "Provides integration of aws and evil."
@@ -27,18 +49,18 @@
 
 ;; aws-mode
 (evil-define-key 'normal aws-mode-map
-  (kbd "RET") #'aws--get-service
+  (kbd "RET") #'aws-services--get-service
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-quit)
 
 ;; aws-cloudformation-mode
 (evil-define-key 'normal aws-cloudformation-mode-map
   (kbd "?") #'aws-cloudformation-help-popup
-  (kbd "d") #'aws--cloudformation-delete-stack
-  (kbd "e") #'aws--cloudformation-describe-stack-events
+  (kbd "d") #'aws-cloudformation--delete-stack
+  (kbd "e") #'aws-cloudformation--describe-stack-events
   (kbd "P") #'aws-set-profile
   (kbd "q") #'aws
-  (kbd "r") #'aws--cloudformation-list-stacks-refresh)
+  (kbd "r") #'aws-cloudformation--list-stacks-refresh)
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map
@@ -52,14 +74,14 @@
   (kbd "?")   #'aws-cloudwatch-alarms-help-popup
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-cloudwatch
-  (kbd "r")   #'aws-cloudwatch-describe-alarms
-  (kbd "t")   #'aws-cloudwatch-enable-disable-alarm)
+  (kbd "r")   #'aws-cloudwatch-alarms-describe-alarms
+  (kbd "t")   #'aws-cloudwatch-alarms-enable-disable-alarm)
 
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map
   (kbd "RET") #'aws-lambda-get-function
   (kbd "?")   #'aws-lambda-help-popup
-  (kbd "e")   #'aws-lambda-list-event-source-mappings-from-line-under-cursor
+  (kbd "e")   #'aws-lambda-event-source-mapping-list-from-line-under-cursor
   (kbd "i")   #'aws-lambda-invoke-popup
   (kbd "L")   #'aws-lambda-get-latest-logs
   (kbd "l")   #'aws-lambda-describe-log-streams
@@ -74,7 +96,7 @@
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-lambda
   (kbd "r")   #'aws-lambda-event-source-mapping-refresh
-  (kbd "u")   #'aws-lambda-update-event-source-mapping-popup)
+  (kbd "u")   #'aws-lambda-event-source-mapping-update-popup)
 
 ;; aws-logs-mode
 (evil-define-key 'normal aws-logs-mode-map
@@ -86,7 +108,7 @@
 
 ;; aws-log-streams
 (evil-define-key 'normal aws-log-streams-mode-map
-  (kbd "RET") #'aws-log-get-log-events-in-log-streams-view
+  (kbd "RET") #'aws-log-streams-get-log-event-in-view
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-logs)
 

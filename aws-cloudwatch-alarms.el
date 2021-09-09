@@ -1,12 +1,39 @@
-;;; package --- Summary
-;; Package-Requires: ((emacs "24.3"))
+;;; aws-cloudwatch-alarms.el --- Emacs major modes wrapping the AWS CLI
+
+;; Copyright (C) 2021, Marcel Patzwahl
+
+;; This file is NOT part of Emacs.
+
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
+
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
+
+;; Version: 1.0
+;; Author: Marcel Patzwahl
+;; Keywords: aws cli tools
+;; URL: https://github.com/snowiow/aws.el
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
 
-;;; Code:
-(require 'aws-core)
+;; Emacs major modes wrapping the AWS CLI
 
-(defun aws-cloudwatch-describe-alarms ()
+;;; Code:
+(require 'transient)
+
+(defun aws-cloudwatch-alarms-describe-alarms ()
   "List all CloudWatch Alarms."
   (interactive)
   (fset 'aws--last-view 'aws-cloudwatch-alarms)
@@ -35,13 +62,13 @@
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws-cloudwatch-describe-alarm ()
+(defun aws-cloudwatch-alarms-describe-alarm ()
   "Describe the alarm under the cursor."
   (interactive)
   (let ((cmd (concat "cloudwatch describe-alarms --alarm-names")))
-    (aws--describe-current-resource cmd)))
+    (aws-core--describe-current-resource cmd)))
 
-(defun aws-cloudwatch-enable-disable-alarm ()
+(defun aws-cloudwatch-alarms-enable-disable-alarm ()
   "Toggle the ActionsEnabled state.
 Disable if it's enabled and enable if it's disabled."
   (interactive)
@@ -64,27 +91,27 @@ Disable if it's enabled and enable if it's disabled."
                     "cloudwatch "
                     action
                     " --alarm-names " current-alarm))
-    (aws-cloudwatch-describe-alarms)
+    (aws-cloudwatch-alarms-describe-alarms)
     (goto-line current-line)
     (message (concat "Executed " action " successfully on " current-alarm))))
 
 (transient-define-prefix aws-cloudwatch-alarms-help-popup ()
   "AWS CloudWatch Alarm Menu"
   ["Actions"
-   ("RET" "Describe Alarm"      aws-cloudwatch-describe-alarm)
+   ("RET" "Describe Alarm"      aws-cloudwatch-alarms-describe-alarm)
    ("P" "Set AWS Profile"       aws-set-profile)
    ("q" "CloudWatch Overview"   aws-cloudwatch)
-   ("r" "Refresh Buffer"        aws-cloudwatch-describe-alarms)
-   ("t" "Toggle ActionsEnabled" aws-cloudwatch-enable-disable-alarm)])
+   ("r" "Refresh Buffer"        aws-cloudwatch-alarms-describe-alarms)
+   ("t" "Toggle ActionsEnabled" aws-cloudwatch-alarms-enable-disable-alarm)])
 
 (defvar aws-cloudwatch-alarms-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'aws-cloudwatch-describe-alarm)
+    (define-key map (kbd "RET") 'aws-cloudwatch-alarms-describe-alarm)
     (define-key map (kbd "?")   'aws-cloudwatch-alarms-help-popup)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-cloudwatch)
-    (define-key map (kbd "r")   'aws-cloudwatch-describe-alarms)
-    (define-key map (kbd "t")   'aws-cloudwatch-enable-disable-alarm)
+    (define-key map (kbd "r")   'aws-cloudwatch-alarms-describe-alarms)
+    (define-key map (kbd "t")   'aws-cloudwatch-alarms-enable-disable-alarm)
     map))
 
 (defun aws-cloudwatch-alarms ()
@@ -98,7 +125,7 @@ Disable if it's enabled and enable if it's disabled."
   "AWS CloudWatch Alarms Mode"
   (setq major-mode 'aws-cloudwatch-alarms-mode)
   (use-local-map aws-cloudwatch-alarms-mode-map)
-  (aws-cloudwatch-describe-alarms))
+  (aws-cloudwatch-alarms-describe-alarms))
 
 (provide 'aws-cloudwatch-alarms)
 ;;; aws-cloudwatch-alarms.el ends here
