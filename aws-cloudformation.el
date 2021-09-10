@@ -113,8 +113,7 @@ If POS is set, jump to that line in the view."
 (defun aws-cloudformation ()
   "Open the CloudFormation Mode."
   (interactive)
-  (setq aws--current-service "cloudformation")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "cloudformation"))
   (aws-cloudformation-mode))
 
 (define-derived-mode aws-cloudformation-mode tabulated-list-mode "aws-cloudformation"

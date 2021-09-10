@@ -159,8 +159,7 @@ ARGS represent the arguments set in the transient."
 (defun aws-lambda ()
   "Open the AWS Lambda Mode."
   (interactive)
-  (setq aws--current-service "lambda")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "lambda"))
   (aws-lambda-mode))
 
 (define-derived-mode aws-lambda-mode tabulated-list-mode "aws-lambda"

@@ -57,13 +57,13 @@
 ;;   (kbd "q")   #'aws)
 
 (defun aws-s3 ()
+  "Open the S3 Mode."
   (interactive)
-  (setq aws--current-service "s3")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "s3"))
   (aws-s3-mode))
 
 (define-derived-mode aws-s3-mode tabulated-list-mode "aws-s3"
-  "AWS mode"
+  "AWS S3 mode"
   (setq major-mode 'aws-s3-mode)
   (use-local-map aws-s3-mode-map)
   (aws-s3-lb))

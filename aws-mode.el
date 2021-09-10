@@ -42,8 +42,6 @@
 (require 'aws-s3)
 (require 'aws-view)
 
-(defvar aws--current-service nil)
-
 (defvar aws-profile (car
                      (split-string
                       (shell-command-to-string "aws configure list-profiles") "\n")))
@@ -56,9 +54,10 @@
 
 (fset 'aws--last-view nil)
 
-(defun aws--buffer-name ()
-  "Return aws.el buffer name."
-  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws--current-service) "*"))
+(defun aws--buffer-name (service)
+  "Return aws.el buffer name.
+SERVICE represents the currently active service"
+  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile service) "*"))
 
 (defun aws--pop-to-buffer (name)
   "Create a buffer with NAME if not exists and switch to it."
@@ -110,12 +109,10 @@ Use either aws-vault exec or --profile based on setting."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws-services--get-service ()
+(defun aws-get-service ()
   "Call the respective aws service view, based on the current tabulated-list entry."
   (interactive)
-  (let ((service (if (tabulated-list-get-entry)
-                     (aref (tabulated-list-get-entry) 0)
-                   aws--current-service)))
+  (let ((service (tabulated-list-get-id)))
     (cond ((equal service "cloudformation") (aws-cloudformation))
           ((equal service "cloudwatch") (aws-cloudwatch))
           ((equal service "services") (aws))
@@ -127,7 +124,7 @@ Use either aws-vault exec or --profile based on setting."
 ;; MODE-MAP
 (defvar aws-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'aws--services-get-service)
+    (define-key map (kbd "RET") 'aws-get-service)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-quit)
     map))
@@ -136,8 +133,7 @@ Use either aws-vault exec or --profile based on setting."
 (defun aws ()
   "Open AWS Major Mode.  This presents a service overview."
   (interactive)
-  (setq aws--current-service "services")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "services"))
   (aws-mode))
 
 (define-derived-mode aws-mode tabulated-list-mode "aws"

@@ -117,8 +117,7 @@ Disable if it's enabled and enable if it's disabled."
 (defun aws-cloudwatch-alarms ()
   "Open AWS CloudWatch Alarms Mode."
   (interactive)
-  (setq aws--current-service "cloudwatch-alarms")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "cloudwatch-alarms"))
   (aws-cloudwatch-alarms-mode))
 
 (define-derived-mode aws-cloudwatch-alarms-mode tabulated-list-mode "aws-cloudwatch-alarms"

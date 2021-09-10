@@ -155,8 +155,7 @@ Current Lambda Function is the one last chosen in AWS Lambda Mode."
   "Open AWS Lambda Event Source Mapping Mode.
 LAMBDA-FUNCTION is the Lambda Function Name to list the event source mappings from."
   (interactive "slambda function name: ")
-  (setq aws--current-service "lambda-event-source-mapping")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "lambda-event-source-mapping"))
   (aws-lambda-event-source-mapping-mode)
   (setq-local aws-lambda-event-source-mapping-current-function-name lambda-function)
   (aws-lambda-event-source-mappings-list aws-lambda-event-source-mapping-current-function-name))

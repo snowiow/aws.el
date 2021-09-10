@@ -83,8 +83,7 @@ Used from the aws-logs mode."
 
 (defun aws-log-streams (log-group-name)
   (interactive "slog-group name: ")
-  (setq aws--current-service "log-streams")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "log-streams"))
   (aws-log-streams-mode)
   (setq-local aws-log-streams-current-group-name log-group-name)
   (aws-log-streams-describe-log-streams log-group-name))

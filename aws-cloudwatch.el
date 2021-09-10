@@ -55,8 +55,7 @@
 (defun aws-cloudwatch ()
   "Open AWS CloudWatch Major Mode.  This presents an overview of CloudWatch subservices."
   (interactive)
-  (setq aws--current-service "cloudwatch")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "cloudwatch"))
   (aws-cloudwatch-mode))
 
 (define-derived-mode aws-cloudwatch-mode tabulated-list-mode "aws-cloudwatch"

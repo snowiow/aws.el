@@ -49,7 +49,7 @@
 
 ;; aws-mode
 (evil-define-key 'normal aws-mode-map
-  (kbd "RET") #'aws-services--get-service
+  (kbd "RET") #'aws-get-service
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-quit)
 

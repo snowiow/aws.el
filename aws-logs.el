@@ -79,8 +79,7 @@
 
 (defun aws-logs ()
   (interactive)
-  (setq aws--current-service "logs")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "logs"))
   (aws-logs-mode))
 
 (define-derived-mode aws-logs-mode tabulated-list-mode "aws-logs"
