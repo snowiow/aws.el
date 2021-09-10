@@ -31,7 +31,16 @@
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
+(require 'aws-cloudformation)
+(require 'aws-cloudwatch-alarms)
+(require 'aws-cloudwatch)
+(require 'aws-core)
+(require 'aws-lambda-event-source-mapping)
+(require 'aws-lambda)
+(require 'aws-log-streams)
+(require 'aws-logs)
 (require 'aws-s3)
+(require 'aws-view)
 
 (defvar aws--current-service nil)
 
@@ -86,7 +95,7 @@ Use either aws-vault exec or --profile based on setting."
       (dolist (buffer-name aws-buffers)
         (kill-buffer buffer-name)))))
 
-(defun aws-services--list ()
+(defun aws--list-services ()
   "List available aws services."
   (interactive)
   (let ((rows (list '("cloudformation" ["cloudformation"])
@@ -116,7 +125,7 @@ Use either aws-vault exec or --profile based on setting."
           (t (message "Hello")))))
 
 ;; MODE-MAP
-(defvar aws-services-mode-map
+(defvar aws-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws--services-get-service)
     (define-key map (kbd "P")   'aws-set-profile)
@@ -134,8 +143,8 @@ Use either aws-vault exec or --profile based on setting."
 (define-derived-mode aws-mode tabulated-list-mode "aws"
   "AWS mode"
   (setq major-mode 'aws-mode)
-  (use-local-map aws-services-mode-map)
-  (aws-services--list-services))
+  (use-local-map aws-mode-map)
+  (aws--list-services))
 
 (provide 'aws-mode)
 ;;; aws-mode.el ends here

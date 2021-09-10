@@ -92,7 +92,7 @@ Disable if it's enabled and enable if it's disabled."
                     action
                     " --alarm-names " current-alarm))
     (aws-cloudwatch-alarms-describe-alarms)
-    (goto-line current-line)
+    (forward-line current-line)
     (message (concat "Executed " action " successfully on " current-alarm))))
 
 (transient-define-prefix aws-cloudwatch-alarms-help-popup ()

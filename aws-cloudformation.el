@@ -61,7 +61,7 @@ If POS is set, jump to that line in the view."
     (tabulated-list-print)
     (hl-line-mode 1)
     (when (numberp pos)
-      (goto-line pos))))
+      (forward-line pos))))
 
 (defun aws-cloudformation--list-stacks-refresh ()
   "Refresh the CloudFormation Stacks Overview and jump to the last position."
@@ -70,7 +70,7 @@ If POS is set, jump to that line in the view."
   (let ((current-line (+ 1 (count-lines 1 (point)))))
     (aws-cloudformation--list-stacks current-line)))
 
-(defun aws-cloudformation--list-stacks-refresh ()
+(defun aws-cloudformation-describe-stack-events ()
   "Describe the CloudFormation Stack Events of the Stack under the cursor."
   (interactive)
   (aws-core--describe-current-resource "cloudformation describe-stack-events --stack-name"))
@@ -95,7 +95,7 @@ If POS is set, jump to that line in the view."
   "AWS CloudFormation Menu"
   ["Actions"
    ("d" "Delete Stack" aws-cloudformation--delete-stack)
-   ("e" "Describe Stack Events" aws-cloudformation--list-stacks-refresh)
+   ("e" "Describe Stack Events" aws-cloudformation-describe-stack-events)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws)
    ("r" "Refresh Buffer" aws-cloudformation--list-stacks-refresh)])
@@ -104,7 +104,7 @@ If POS is set, jump to that line in the view."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "?") 'aws-cloudformation-help-popup)
     (define-key map (kbd "d") 'aws-cloudformation--delete-stack)
-    (define-key map (kbd "e") 'aws-cloudformation--list-stacks-refresh)
+    (define-key map (kbd "e") 'aws-cloudformation-describe-stack-events)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "r") 'aws-cloudformation--list-stacks-refresh)

@@ -34,7 +34,7 @@
 
 (require 'transient)
 
-(defun aws-logs-describe-log-group ()
+(defun aws-logs-describe-log-groups ()
   "List all log groups by it's names."
   (fset 'aws--last-view 'aws-logs)
   (let* ((rows (mapcar (lambda (x)
@@ -87,7 +87,7 @@
   "AWS mode"
   (setq major-mode 'aws-logs-mode)
   (use-local-map aws-logs-mode-map)
-  (aws-logs-describe-log-group))
+  (aws-logs-describe-log-groups))
 
 (provide 'aws-logs)
 ;;; aws-logs.el ends here
