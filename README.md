@@ -1,4 +1,5 @@
 # aws.el
+[![Build Status](https://github.com/snowiow/aws.el/workflows/CI/badge.svg)](https://github.com/snowiow/aws.el/actions)
 
 Emacs major modes wrapping the AWS CLI. 
 
@@ -20,12 +21,13 @@ Github and load it via [use-package](https://github.com/jwiegley/use-package)
 like I do:
 
 ```elisp
-(use-package aws
+(use-package aws-mode
   :load-path "~/.emacs.d/packages/awscli"
   :custom
   (aws-vault t))
 
 (use-package aws-evil
+  :after (aws-mode evil)
   :load-path "~/.emacs.d/packages/awscli")
 ```
 
@@ -52,6 +54,9 @@ commands in the AWS CLI itself.
 # Features
 - Switch between your configured profiles
 - Works with the `--profile` flag as well as aws-vault sessions
+- CloudFormation
+    - List Stacks
+      - Delete Stack
 - CloudWatch
     - List CloudWatch Alarms in Account
         - Enable/Disable ActionsEnabled field 
