@@ -1,0 +1,33 @@
+name: CI
+
+on: push
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        elisp-check:
+          - load-file
+          - byte-compile
+          - melpa
+          - package-lint
+          - checkdoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: purcell/setup-emacs@v3.0
+        with:
+          version: 27.2
+      - name: install dependencies
+        run: |
+          emacs -Q --batch -l .github/workflows/install-deps.el
+      - name: run linter
+        uses: leotaku/elisp-check@v1.1
+        with:
+          check: ${{ matrix.elisp-check }}
+          file: "*.el"
+      - name: run tests
+        uses: leotaku/elisp-check@v1.1
+        with:
+          check: ert
+          file: "test/*-test.el"

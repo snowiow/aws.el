@@ -1,46 +1,38 @@
-(defvar aws--current-service nil)
+;;; aws-core.el --- Emacs major modes wrapping the AWS CLI
 
-(defvar aws-profile (car
-                     (split-string
-                      (shell-command-to-string "aws configure list-profiles") "\n")))
+;; Copyright (C) 2021, Marcel Patzwahl
 
-(defcustom aws-vault nil
-  "Set if aws-vault should be used for aws sessions."
-  :type 'symbol
-  :group 'aws
-  :options '('t 'nil))
+;; This file is NOT part of Emacs.
 
-(fset 'aws--last-view nil)
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
 
-(defun aws--buffer-name ()
-  "Return aws.el buffer name."
-  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile aws--current-service) "*"))
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
 
-(defun aws--pop-to-buffer (name)
-  "Create a buffer with NAME if not exists and switch to it."
-  (unless (get-buffer name)
-    (get-buffer-create name))
-    (pop-to-buffer-same-window name))
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
 
-(defun aws-cmd ()
-  "Create the AWS base cmd with the right profile.
-Use either aws-vault exec or --profile based on setting."
-  (if aws-vault
-      (concat "aws-vault exec "
-              aws-profile
-              " -- aws ")
-    (concat "aws --profile " aws-profile)))
+;; Version: 1.0
+;; Author: Marcel Patzwahl
+;; Keywords: aws cli tools
+;; URL: https://github.com/snowiow/aws.el
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((emacs "26.1"))
 
-(defun aws-set-profile ()
-  "Set active AWS Profile."
-  (interactive)
-  (setq aws-profile
-        (completing-read
-         "Select profile: "
-         (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
-  (aws--last-view))
+;;; Commentary:
 
-(defun aws--tabulated-list-from-command (cmd header)
+;; Emacs major modes wrapping the AWS CLI
+
+;;; Code:
+
+(defun aws-core--tabulated-list-from-command (cmd header)
   (let ((rows
          (mapcar
           (lambda (x) `(nil [,x]))
@@ -53,7 +45,7 @@ Use either aws-vault exec or --profile based on setting."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws--describe-current-resource (cmd)
+(defun aws-core--describe-current-resource (cmd)
   "Describe resource under cursor.  CMD is the aws command to describe the resource."
   (let* ((current-resource (tabulated-list-get-id))
          (buffer (concat (aws--buffer-name) ": " cmd " " current-resource "*"))

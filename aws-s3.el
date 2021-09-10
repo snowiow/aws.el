@@ -1,7 +1,37 @@
-(require 'evil)
-(require 'aws-core)
+;;; aws-s3.el --- Emacs major modes wrapping the AWS CLI
+
+;; Copyright (C) 2021, Marcel Patzwahl
+
+;; This file is NOT part of Emacs.
+
+;; This  program is  free  software; you  can  redistribute it  and/or
+;; modify it  under the  terms of  the GNU  General Public  License as
+;; published by the Free Software  Foundation; either version 2 of the
+;; License, or (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+;; MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.   See the GNU
+;; General Public License for more details.
+
+;; You should have  received a copy of the GNU  General Public License
+;; along  with  this program;  if  not,  write  to the  Free  Software
+;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;; USA
+
+;; Version: 1.0
+;; Author: Marcel Patzwahl
+;; Keywords: aws cli tools
+;; URL: https://github.com/snowiow/aws.el
+;; License: GNU General Public License >= 3
+;; Package-Requires: ((emacs "26.1"))
+
+;;; Commentary:
+
+;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
+
 (defun aws-s3-lb ()
   (let ((rows (mapcar (lambda (x) `(nil [,x]))
                           (split-string
@@ -27,15 +57,16 @@
 ;;   (kbd "q")   #'aws)
 
 (defun aws-s3 ()
+  "Open the S3 Mode."
   (interactive)
-  (setq aws--current-service "s3")
-  (aws--pop-to-buffer (aws--buffer-name))
+  (aws--pop-to-buffer (aws--buffer-name "s3"))
   (aws-s3-mode))
 
 (define-derived-mode aws-s3-mode tabulated-list-mode "aws-s3"
-  "AWS mode"
+  "AWS S3 mode"
   (setq major-mode 'aws-s3-mode)
   (use-local-map aws-s3-mode-map)
   (aws-s3-lb))
 
 (provide 'aws-s3)
+;;; aws-s3.el ends here
