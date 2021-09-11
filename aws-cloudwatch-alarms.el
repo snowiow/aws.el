@@ -62,6 +62,11 @@
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+(defun aws-cloudwatch-alarms-describe-alarms-refresh ()
+  "Refresh the CloudWatch Alarms Overview and jump to the last position."
+  (interactive)
+  (aws-core--refresh-list-view 'aws-cloudwatch-alarms-describe-alarms))
+
 (defun aws-cloudwatch-alarms-describe-alarm ()
   "Describe the alarm under the cursor."
   (interactive)
@@ -101,7 +106,7 @@ Disable if it's enabled and enable if it's disabled."
    ("RET" "Describe Alarm"      aws-cloudwatch-alarms-describe-alarm)
    ("P" "Set AWS Profile"       aws-set-profile)
    ("q" "CloudWatch Overview"   aws-cloudwatch)
-   ("r" "Refresh Buffer"        aws-cloudwatch-alarms-describe-alarms)
+   ("r" "Refresh Buffer"        aws-cloudwatch-alarms-describe-alarms-refresh)
    ("t" "Toggle ActionsEnabled" aws-cloudwatch-alarms-enable-disable-alarm)])
 
 (defvar aws-cloudwatch-alarms-mode-map
@@ -110,7 +115,7 @@ Disable if it's enabled and enable if it's disabled."
     (define-key map (kbd "?")   'aws-cloudwatch-alarms-help-popup)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-cloudwatch)
-    (define-key map (kbd "r")   'aws-cloudwatch-alarms-describe-alarms)
+    (define-key map (kbd "r")   'aws-cloudwatch-alarms-describe-alarms-refresh)
     (define-key map (kbd "t")   'aws-cloudwatch-alarms-enable-disable-alarm)
     map))
 

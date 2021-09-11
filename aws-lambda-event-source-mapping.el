@@ -64,6 +64,12 @@ Used in AWS Lambda Mode."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+(defun aws-lambda-event-source-mapping-list-refresh ()
+  "Refresh the Event Source Mappings of the current Lambda Function.
+Current Lambda Function is the one last chosen in AWS Lambda Mode."
+  (interactive)
+  (aws-core--refresh-list-view 'aws-lambda-event-source-mapping 'aws-lambda-event-source-mapping-current-function-name))
+
 (defun aws-lambda-event-source-mapping-get ()
   "Describe the Lambda Event Source Mapping under the cursor.
 Used in AWS Lambda Event Source Mapping Mode."
@@ -99,7 +105,7 @@ ARGS represent the arguments set in the transient."
   ["Actions"
    ("RET" "Get Event Source Mapping" aws--lambda-get-event-source-mapping)
    ("q" "Lambdas" aws-lambda)
-   ("r" "Refresh Buffer" aws-lambda-event-source-mapping)
+   ("r" "Refresh Buffer" aws-lambda-event-source-mapping-list-refresh)
    ("P" "Set AWS Profile" aws-set-profile)
    ("u" "Update Event Source Mapping" aws-lambda-event-source-mapping-update-popup)])
 
@@ -140,16 +146,9 @@ ARGS represent the arguments set in the transient."
     (define-key map (kbd "?")   'aws-lambda-event-source-mapping-help-popup)
     (define-key map (kbd "q")   'aws-lambda)
     (define-key map (kbd "P")   'aws-set-profile)
-    (define-key map (kbd "r")   'aws-lambda-event-source-mapping-refresh)
+    (define-key map (kbd "r")   'aws-lambda-event-source-mapping-list-refresh)
     (define-key map (kbd "u")   'aws-lambda-event-source-mapping-update)
     map))
-
-(defun aws-lambda-event-source-mapping-refresh ()
-  "Refresh the Event Source Mappings of the current Lambda Function.
-Current Lambda Function is the one last chosen in AWS Lambda Mode."
-  (interactive)
-  (message "Refreshing buffer...")
-  (aws-lambda-event-source-mapping aws-lambda-event-source-mapping-current-function-name))
 
 (defun aws-lambda-event-source-mapping (lambda-function)
   "Open AWS Lambda Event Source Mapping Mode.
