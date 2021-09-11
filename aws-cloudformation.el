@@ -36,7 +36,7 @@
 ; TODO: When https://github.com/aws/aws-cli/issues/6189 gets intgrated, this list can be inverted. This would end up in just one item
 (defvar aws-cloudformation--stack-status-filter "CREATE_IN_PROGRESS CREATE_FAILED CREATE_COMPLETE ROLLBACK_IN_PROGRESS ROLLBACK_FAILED ROLLBACK_COMPLETE DELETE_IN_PROGRESS DELETE_FAILED UPDATE_IN_PROGRESS UPDATE_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_COMPLETE UPDATE_ROLLBACK_IN_PROGRESS UPDATE_ROLLBACK_FAILED UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS UPDATE_ROLLBACK_COMPLETE REVIEW_IN_PROGRESS IMPORT_IN_PROGRESS IMPORT_COMPLETE IMPORT_ROLLBACK_IN_PROGRESS IMPORT_ROLLBACK_FAILED IMPORT_ROLLBACK_COMPLETE")
 
-(defun aws-cloudformation--list-stacks (&optional pos)
+(defun aws-cloudformation--list-stacks ()
   "List all CloudFormation Stacks.
 If POS is set, jump to that line in the view."
   (interactive)
@@ -59,16 +59,12 @@ If POS is set, jump to that line in the view."
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
     (tabulated-list-print)
-    (hl-line-mode 1)
-    (when (numberp pos)
-      (forward-line pos))))
+    (hl-line-mode 1)))
 
-(defun aws-cloudformation--list-stacks-refresh ()
+(defun aws-cloudformation-list-stacks-refresh ()
   "Refresh the CloudFormation Stacks Overview and jump to the last position."
   (interactive)
-  (message "Refreshing buffer...")
-  (let ((current-line (+ 1 (count-lines 1 (point)))))
-    (aws-cloudformation--list-stacks current-line)))
+  (aws-core--refresh-list-view 'aws-cloudformation--list-stacks))
 
 (defun aws-cloudformation-describe-stack-events ()
   "Describe the CloudFormation Stack Events of the Stack under the cursor."
@@ -88,17 +84,17 @@ If POS is set, jump to that line in the view."
                        "--stack-name " stack-name))
              (cmd (concat (aws-cmd) sub-cmd)))
         (shell-command cmd)
-        (aws-cloudformation--list-stacks-refresh)
+        (aws-cloudformation-list-stacks-refresh)
         (message (concat "Triggered deletion on stack " stack-name))))))
 
 (transient-define-prefix aws-cloudformation-help-popup ()
-  "AWS CloudFormation Menu"
+  "AWS CloudFormation Help Menu"
   ["Actions"
    ("d" "Delete Stack" aws-cloudformation--delete-stack)
    ("e" "Describe Stack Events" aws-cloudformation-describe-stack-events)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws)
-   ("r" "Refresh Buffer" aws-cloudformation--list-stacks-refresh)])
+   ("r" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)])
 
 (defvar aws-cloudformation-mode-map
   (let ((map (make-sparse-keymap)))
@@ -107,7 +103,7 @@ If POS is set, jump to that line in the view."
     (define-key map (kbd "e") 'aws-cloudformation-describe-stack-events)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
-    (define-key map (kbd "r") 'aws-cloudformation--list-stacks-refresh)
+    (define-key map (kbd "r") 'aws-cloudformation-list-stacks-refresh)
     map))
 
 (defun aws-cloudformation ()

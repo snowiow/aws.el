@@ -60,7 +60,7 @@
   (kbd "e") #'aws-cloudformation--describe-stack-events
   (kbd "P") #'aws-set-profile
   (kbd "q") #'aws
-  (kbd "r") #'aws-cloudformation--list-stacks-refresh)
+  (kbd "r") #'aws-cloudformation-list-stacks-refresh)
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map
@@ -74,7 +74,7 @@
   (kbd "?")   #'aws-cloudwatch-alarms-help-popup
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-cloudwatch
-  (kbd "r")   #'aws-cloudwatch-alarms-describe-alarms
+  (kbd "r")   #'aws-cloudwatch-alarms-describe-alarms-refresh
   (kbd "t")   #'aws-cloudwatch-alarms-enable-disable-alarm)
 
 ;; aws-lambda-mode
@@ -95,7 +95,7 @@
   (kbd "?")   #'aws-lambda-event-source-mapping-help-popup
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-lambda
-  (kbd "r")   #'aws-lambda-event-source-mapping-refresh
+  (kbd "r")   #'aws-lambda-event-source-mapping-list-refresh
   (kbd "u")   #'aws-lambda-event-source-mapping-update-popup)
 
 ;; aws-logs-mode
