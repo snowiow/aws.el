@@ -114,8 +114,11 @@
 
 ;; aws-s3-mode
 (evil-define-key 'normal aws-s3-mode-map
-  (kbd "P")   #'aws-set-profile
-  (kbd "q")   #'aws)
+  (kbd "?") #'aws-s3-help-popup
+  (kbd "m") #'aws-s3-mb
+  (kbd "P") #'aws-set-profile
+  (kbd "q") #'aws
+  (kbd "r") #'aws-s3-lb-refresh)
 
 ;; aws-view-mode
 (evil-define-key 'normal aws-view-mode-map

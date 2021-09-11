@@ -44,17 +44,34 @@
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+(defun aws-s3-lb-refresh ()
+  "Refresh the S3 Overview and jump to the last position."
+  (interactive)
+  (aws-core--refresh-list-view 'aws-s3-lb))
+
+(defun aws-s3-mb (bucket-name)
+  "Create an S3 Bucket with the name BUCKET-NAME."
+  (interactive "sBucket Name: s3://")
+  (let ((output (shell-command-to-string (concat (aws-cmd) "s3 mb s3://" bucket-name))))
+    (aws-s3-lb-refresh)
+    (message (s-trim output))))
+
+(transient-define-prefix aws-s3-help-popup ()
+  "AWS S3 Help Menu"
+  ["Actions"
+   ("m" "Make Bucket" aws-s3-mb)
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("q" "Services" aws)
+   ("r" "Refresh Buffer" aws-s3-lb-refresh)])
+
 (defvar aws-s3-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "?") 'aws-s3-help-popup)
+    (define-key map (kbd "m") 'aws-s3-mb)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
+    (define-key map (kbd "r") 'aws-s3-lb-refresh)
     map))
-
-;; (evil-set-initial-state 'aws-s3-mode 'motion)
-
-;; (evil-define-key 'motion aws-s3-mode-map
-;;   (kbd "P")   #'aws-set-profile
-;;   (kbd "q")   #'aws)
 
 (defun aws-s3 ()
   "Open the S3 Mode."

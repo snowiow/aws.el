@@ -56,7 +56,7 @@ commands in the AWS CLI itself.
 - Works with the `--profile` flag as well as aws-vault sessions
 - CloudFormation
     - List Stacks
-      - Delete Stack
+    - Delete Stack
 - CloudWatch
     - List CloudWatch Alarms in Account
         - Enable/Disable ActionsEnabled field 
@@ -76,6 +76,7 @@ commands in the AWS CLI itself.
         - Get Log Events
 - S3
     - List S3 Buckets
+    - Create Bucket
 
 ## Images of selected Features
 ### Main View with Switch Profile Auto Completion open
