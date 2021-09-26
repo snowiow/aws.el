@@ -60,7 +60,9 @@
 LIST-FUNCTION is the function to load the list"
   (message "Refreshing buffer...")
   (let ((current-line (+ 1 (count-lines 1 (point)))))
-    (funcall list-function args)
+    (if (> (length args) 0)
+        (funcall list-function args)
+      (funcall list-function))
     (forward-line current-line))
   (message "Buffer refreshed"))
 
