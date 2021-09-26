@@ -114,6 +114,7 @@
 
 ;; aws-s3-mode
 (evil-define-key 'normal aws-s3-mode-map
+  (kbd "d") #'aws-s3-rb-under-cursor
   (kbd "?") #'aws-s3-help-popup
   (kbd "m") #'aws-s3-mb
   (kbd "P") #'aws-set-profile

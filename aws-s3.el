@@ -33,11 +33,15 @@
 ;;; Code:
 
 (defun aws-s3-lb ()
-  (let ((rows (mapcar (lambda (x) `(nil [,x]))
+  "List all S3 Buckets in a tabulated list view."
+  (interactive)
+  (fset 'aws--last-view 'aws-s3)
+  (let ((rows (mapcar (lambda (x)
+                        (let ((splitted (split-string x "\s")))
+                          (list (car (last splitted)) (vector (last splitted)))))
                           (split-string
                            (shell-command-to-string
-                            (concat (aws-cmd) "s3 ls | awk '{print $3}'")) "\n"))))
-    (fset 'aws--last-view 'aws-s3)
+                            (concat (aws-cmd) "s3 ls")) "\n"))))
     (setq tabulated-list-format [("Buckets" 100)])
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
@@ -56,9 +60,30 @@
     (aws-s3-lb-refresh)
     (message (s-trim output))))
 
+(defun aws-s3-rb (bucket-name)
+  "Remove given Bucket.  --force is always used.
+BUCKET-NAME is the name of the Bucket to be deleted."
+  (interactive "sBucket Name: s3://")
+  (when (yes-or-no-p (concat
+                      "Are you sure you want to delete the bucket "
+                      bucket-name
+                      "?"))
+    (let ((output (shell-command-to-string
+                   (concat (aws-cmd) "s3 rb --force s3://" bucket-name))))
+      (aws-s3-lb-refresh)
+      (message (s-trim output)))))
+
+(defun aws-s3-rb-under-cursor ()
+  "Remove the Bucket under the cursor in the S3 Overview."
+  (interactive)
+  (let ((bucket-name (tabulated-list-get-id)))
+    (aws-s3-rb bucket-name)))
+
+
 (transient-define-prefix aws-s3-help-popup ()
   "AWS S3 Help Menu"
   ["Actions"
+   ("d" "Delete Bucket" aws-s3-rb-under-cursor)
    ("m" "Make Bucket" aws-s3-mb)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Services" aws)
@@ -67,6 +92,7 @@
 (defvar aws-s3-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "?") 'aws-s3-help-popup)
+    (define-key map (kbd "d") 'aws-s3-rb-under-cursor)
     (define-key map (kbd "m") 'aws-s3-mb)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
