@@ -66,7 +66,7 @@ This function is used in the AWS Lambda Mode."
             (concat
              (aws-cmd)
              (aws-log-streams-get-latest-logs-command log-group-name "1"))) "\n"))))
-    (aws-log-get-log-events log-group-name latest-log-stream)))
+    (aws-log-streams-get-log-event log-group-name latest-log-stream)))
 
 (defun aws-lambda-describe-log-streams ()
   "List all log streams for the Lambda Function under the cursor.
