@@ -55,15 +55,17 @@
     (with-current-buffer buffer
       (aws-view-mode))))
 
+(defun aws-core--get-current-line ()
+  (+ 1 (count-lines 1 (point))))
+
 (defun aws-core--refresh-list-view (list-function &rest args)
   "Refresh the current tabulated list view.
 LIST-FUNCTION is the function to load the list"
   (message "Refreshing buffer...")
-  (let ((current-line (+ 1 (count-lines 1 (point)))))
-    (if (> (length args) 0)
-        (funcall list-function args)
-      (funcall list-function))
-    (forward-line current-line))
+  (if (> (length args) 0)
+      (funcall list-function args)
+    (funcall list-function))
+  (forward-line (aws-core--get-current-line))
   (message "Buffer refreshed"))
 
 (provide 'aws-core)
