@@ -22,12 +22,12 @@ jobs:
         run: |
           emacs -Q --batch -l .github/workflows/install-deps.el
       - name: run linter
-        uses: leotaku/elisp-check@master
+        uses: leotaku/elisp-check@v1.2
         with:
           check: ${{ matrix.elisp-check }}
           file: "*.el"
       - name: run tests
-        uses: leotaku/elisp-check@master
+        uses: leotaku/elisp-check@v1.2
         with:
           check: ert
           file: "test/*-test.el"
