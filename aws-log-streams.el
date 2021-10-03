@@ -35,6 +35,8 @@
 (defvar-local aws-log-streams-current-group-name nil)
 
 (defun aws-log-streams-get-latest-logs-command (log-group-name &optional count)
+  "Return the aws command to retrieve the latest logs for LOG-GROUP-NAME.
+An optional COUNT ca be passed to limit the maximum amount of log events."
   (let ((max-items-string (if count
                              (concat "--max-items " count)
                            "")))
@@ -46,16 +48,19 @@
             max-items-string)))
 
 (defun aws-log-streams-describe-log-streams (log-group-name)
+  "Tabulated-list-view of the log streams for a given LOG-GROUP-NAME."
   (aws-core--tabulated-list-from-command
    (aws-log-streams-get-latest-logs-command log-group-name)
    [("Log Streams" 100)]))
 
 (defun aws-log-streams-get-log-event-in-view ()
+  "Get the log events for the current log stream."
   (interactive)
   (let ((current-log-stream-name (aref (tabulated-list-get-entry) 0)))
     (aws-log-streams-get-log-event aws-log-streams-current-group-name current-log-stream-name)))
 
 (defun aws-log-streams-get-log-event (log-group log-stream)
+  "Get the log events for the LOG-GROUPs LOG-STREAM."
   (let ((buffer (concat "*" log-group ": " log-stream "*"))
         (cmd (concat
               (aws-cmd)
@@ -83,6 +88,7 @@ Used from the aws-logs mode."
     (aws-log-streams log-group-name)))
 
 (defun aws-log-streams (log-group-name)
+  "List the LOG-GROUP-NAMEs log streams."
   (interactive "slog-group name: ")
   (aws--pop-to-buffer (aws--buffer-name "log-streams"))
   (aws-log-streams-mode)

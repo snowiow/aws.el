@@ -80,7 +80,7 @@ Used in AWS Lambda Event Source Mapping Mode."
 (defun aws-lambda-event-source-mapping-update (&optional args)
   "Update the Event Source Mapping under the cursor.
 Used in AWS Lambda Event Source Mapping Mode.
-Called from the aws-lambda-event-source-mapping-update-popup transient.
+Called from the 'aws-lambda-event-source-mapping-update-popup' transient.
 ARGS represent the arguments set in the transient."
   (interactive (list (transient-args 'aws-lambda-event-source-mapping-update-popup)))
   (let* ((uuid (tabulated-list-get-id))
