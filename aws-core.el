@@ -33,6 +33,9 @@
 ;;; Code:
 
 (defun aws-core--tabulated-list-from-command (cmd header)
+  "Displays an aws service list command in a tabulated-list-view.
+CMD is the aws command to get the resources to list.
+HEADER configures the column header for the tabulated-list-view."
   (let ((rows
          (mapcar
           (lambda (x)

@@ -90,9 +90,11 @@ ARGS represent the arguments set in the transient."
     (with-current-buffer buffer (aws-text-view-mode))))
 
 (defun aws-lambda--tmp-outfile (function-name)
+  "Location where the Lambda Function FUNCTION-NAME output is stored."
   (concat "/tmp/aws-el-lambda-" function-name "-output.json"))
 
 (defun aws-lambda-view-last-execution ()
+  "Open the output of the last execution in a buffer."
   (interactive)
   (let* ((function-name (aref (tabulated-list-get-entry) 0))
          (outfile-path (aws-lambda--tmp-outfile function-name)))
