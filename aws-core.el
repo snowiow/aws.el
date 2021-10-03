@@ -35,7 +35,8 @@
 (defun aws-core--tabulated-list-from-command (cmd header)
   (let ((rows
          (mapcar
-          (lambda (x) `(nil [,x]))
+          (lambda (x)
+            (list x (vector x)))
           (split-string
            (shell-command-to-string
             (concat (aws-cmd) cmd)) "\t"))))
@@ -48,19 +49,27 @@
 (defun aws-core--describe-current-resource (cmd)
   "Describe resource under cursor.  CMD is the aws command to describe the resource."
   (let* ((current-resource (tabulated-list-get-id))
-         (buffer (concat (aws--buffer-name) ": " cmd " " current-resource "*"))
-         (cmd (concat (aws-cmd) "--output yaml " cmd " " current-resource)))
+         (service-name (car (split-string cmd)))
+         (buffer (concat (aws--buffer-name service-name) ": " cmd " " current-resource "*"))
+         (cmd (concat (aws-cmd)
+                      "--output "
+                      aws-output
+                      " "
+                      cmd
+                      " "
+                      current-resource)))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
     (with-current-buffer buffer
-      (aws-view-mode))))
+      (aws--get-view-mode))))
 
 (defun aws-core--get-current-line ()
+  "Get the current line where point is."
   (+ 1 (count-lines 1 (point))))
 
 (defun aws-core--refresh-list-view (list-function &rest args)
   "Refresh the current tabulated list view.
-LIST-FUNCTION is the function to load the list"
+LIST-FUNCTION is the function to load the list and ARGS will be passed to LIST-FUNCTION if needed."
   (message "Refreshing buffer...")
   (if (> (length args) 0)
       (funcall list-function args)

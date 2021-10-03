@@ -36,9 +36,21 @@
     (define-key map (kbd "q") 'kill-current-buffer)
     map))
 
-(define-derived-mode aws-view-mode fundamental-mode "aws-view"
+(define-derived-mode aws-view-yaml-mode yaml-mode "aws-view-yaml"
   "AWS mode"
-  (setq major-mode 'aws-view-mode)
+  (setq major-mode 'aws-view-yaml-mode)
+  (use-local-map aws-view-mode-map)
+  (view-mode))
+
+(define-derived-mode aws-view-json-mode json-mode "aws-view-json"
+  "AWS mode"
+  (setq major-mode 'aws-view-json-mode)
+  (use-local-map aws-view-mode-map)
+  (view-mode))
+
+(define-derived-mode aws-view-text-mode fundamental-mode "aws-view-text"
+  "AWS mode"
+  (setq major-mode 'aws-view-text-mode)
   (use-local-map aws-view-mode-map)
   (view-mode))
 
