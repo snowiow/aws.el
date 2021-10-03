@@ -60,10 +60,11 @@
         (cmd (concat
               (aws-cmd)
               "logs get-log-events --log-group-name '" log-group
-              "' --log-stream-name '" log-stream "'")))
+              "' --log-stream-name '" log-stream "'"
+               " --output=" aws-output)))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
-    (with-current-buffer buffer (aws-view-mode))))
+    (with-current-buffer buffer (aws--get-view-mode))))
 
 (defvar aws-log-streams-mode-map
   (let ((map (make-sparse-keymap)))

@@ -24,7 +24,8 @@ like I do:
 (use-package aws-mode
   :load-path "~/.emacs.d/packages/awscli"
   :custom
-  (aws-vault t))
+  (aws-vault t)
+  (aws-output "json")) ;; optional: yaml, json, text (default: yaml)
 
 (use-package aws-evil
   :after (aws-mode evil)

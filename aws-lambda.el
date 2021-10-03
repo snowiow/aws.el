@@ -44,14 +44,9 @@
   "Describe the Lambda Function under the cursor.
 This function is used in the AWS Lambda Mode."
   (interactive)
-  (let* ((buffer "*aws.el: lambda-info*")
-        (function-name (aref (tabulated-list-get-entry) 0))
-        (function-desc-cmd
-         (concat (aws-cmd) "lambda get-function --output yaml --function-name " function-name)))
-    (call-process-shell-command function-desc-cmd nil buffer)
-    (switch-to-buffer buffer)
-    (with-current-buffer buffer
-      (aws-view-mode))))
+  (let ((cmd "lambda get-function --function-name"))
+    (aws-core--describe-current-resource cmd)))
+
 
 (defun aws-lambda-get-latest-logs ()
   "Get the latest logs of the Lambda Function under the cursor.
@@ -92,7 +87,7 @@ ARGS represent the arguments set in the transient."
          (cmd (concat (aws-cmd) subcmd)))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
-    (with-current-buffer buffer (aws-view-mode))))
+    (with-current-buffer buffer (aws-text-view-mode))))
 
 (defun aws-lambda--tmp-outfile (function-name)
   (concat "/tmp/aws-el-lambda-" function-name "-output.json"))

@@ -46,6 +46,12 @@
                      (split-string
                       (shell-command-to-string "aws configure list-profiles") "\n")))
 
+(defcustom aws-output "yaml"
+  "Defines in which format aws outputs are represented."
+  :type '(string)
+  :group 'aws
+  :options '("yaml" "json" "text"))
+
 (defcustom aws-vault nil
   "Set if aws-vault should be used for aws sessions."
   :type 'symbol
@@ -120,6 +126,13 @@ Use either aws-vault exec or --profile based on setting."
           ((equal service "logs") (aws-logs))
           ((equal service "s3") (aws-s3))
           (t (message "Hello")))))
+
+(defun aws--get-view-mode ()
+  "Return the fitting view mode for aws-output."
+  (cond ((equal aws-output "yaml") (aws-yaml-view-mode))
+        ((equal aws-output "json") (aws-json-view-mode))
+        ((equal aws-output "text") (aws-text-view-mode))
+        (t (message "Invalid aws-output '%s' set! Choose one of ['yaml','json','text']" aws-output))))
 
 ;; MODE-MAP
 (defvar aws-mode-map

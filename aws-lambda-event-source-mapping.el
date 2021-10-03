@@ -74,13 +74,8 @@ Current Lambda Function is the one last chosen in AWS Lambda Mode."
   "Describe the Lambda Event Source Mapping under the cursor.
 Used in AWS Lambda Event Source Mapping Mode."
   (interactive)
-  (let* ((uuid (tabulated-list-get-id))
-         (subcmd (concat "lambda get-event-source-mapping --uuid=" uuid))
-         (buffer (concat "*" subcmd "*"))
-         (cmd (concat (aws-cmd) subcmd)))
-    (call-process-shell-command cmd nil buffer)
-    (switch-to-buffer buffer)
-    (with-current-buffer buffer (aws-view-mode))))
+  (let ((cmd "lambda get-event-source-mapping --uuid"))
+    (aws-core--describe-current-resource cmd)))
 
 (defun aws-lambda-event-source-mapping-update (&optional args)
   "Update the Event Source Mapping under the cursor.
@@ -92,13 +87,14 @@ ARGS represent the arguments set in the transient."
          (subcmd
           (concat
            "lambda update-event-source-mapping "
+           "--output=" aws-output
            "--uuid=" uuid " "
            (mapconcat 'identity args " ")))
          (buffer (concat "*" subcmd "*"))
          (cmd (concat (aws-cmd) subcmd)))
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
-    (with-current-buffer buffer (aws-view-mode))))
+    (with-current-buffer buffer (aws--get-view-mode))))
 
 ;; TRANSIENTS
 (transient-define-prefix aws-lambda-event-source-mapping-help-popup ()
