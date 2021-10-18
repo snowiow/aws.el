@@ -35,6 +35,7 @@
 (require 'aws-cloudwatch-alarms)
 (require 'aws-cloudwatch)
 (require 'aws-core)
+(require 'aws-events)
 (require 'aws-lambda-event-source-mapping)
 (require 'aws-lambda)
 (require 'aws-log-streams)
@@ -104,6 +105,7 @@ Use either aws-vault exec or --profile based on setting."
   "List available aws services."
   (interactive)
   (let ((rows (list '("cloudformation" ["cloudformation"])
+                    '("events" ["events"])
                     '("cloudwatch" ["cloudwatch"])
                     '("lambda" ["lambda"])
                     '("logs" ["logs"])
@@ -121,7 +123,7 @@ Use either aws-vault exec or --profile based on setting."
   (let ((service (tabulated-list-get-id)))
     (cond ((equal service "cloudformation") (aws-cloudformation))
           ((equal service "cloudwatch") (aws-cloudwatch))
-          ((equal service "services") (aws))
+          ((equal service "events") (aws-events))
           ((equal service "lambda") (aws-lambda))
           ((equal service "logs") (aws-logs))
           ((equal service "s3") (aws-s3))
@@ -129,9 +131,9 @@ Use either aws-vault exec or --profile based on setting."
 
 (defun aws--get-view-mode ()
   "Return the fitting view mode for aws-output."
-  (cond ((equal aws-output "yaml") (aws-yaml-view-mode))
-        ((equal aws-output "json") (aws-json-view-mode))
-        ((equal aws-output "text") (aws-text-view-mode))
+  (cond ((equal aws-output "yaml") (aws-view-yaml-mode))
+        ((equal aws-output "json") (aws-view-json-mode))
+        ((equal aws-output "text") (aws-view-text-mode))
         (t (message "Invalid aws-output '%s' set! Choose one of ['yaml','json','text']" aws-output))))
 
 ;; MODE-MAP
