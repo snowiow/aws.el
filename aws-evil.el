@@ -79,7 +79,12 @@
 
 ;; aws-events-mode
 (evil-define-key 'normal aws-events-mode-map
+  (kbd "RET") #'aws-events-rules
   (kbd "q") #'aws)
+
+;; aws-events-rules-mode
+(evil-define-key 'normal aws-events-rules-mode-map
+  (kbd "q") #'aws-events)
 
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map
