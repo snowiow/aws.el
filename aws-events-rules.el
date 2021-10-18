@@ -1,4 +1,4 @@
-;;; aws-events.el --- Emacs major modes wrapping the AWS CLI
+;;; aws-events-rules.el --- Emacs major modes wrapping the AWS CLI
 
 ;; Copyright (C) 2021, Marcel Patzwahl
 
@@ -22,7 +22,7 @@
 ;; Version: 1.0
 ;; Author: Marcel Patzwahl
 ;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
+;; URL: https://github.com/snowiow/aws-events-rules.el
 ;; License: GNU General Public License >= 3
 ;; Package-Requires: ((emacs "26.1"))
 
@@ -31,34 +31,43 @@
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
-(defun aws-events--list ()
-  "List all Events services."
+(defun aws-events-rules-list-rules ()
+  "List all Events Rules."
   (interactive)
-  (let ((rows (list '("rules" ["rules"]))))
-    (fset 'aws--last-view 'aws-events)
-    (setq tabulated-list-format [("Events" 100)])
+  (fset 'aws--last-view 'aws-events-rules)
+  (let ((rows
+         (mapcar
+          (lambda (x)
+            (let ((splitted (split-string x "\t")))
+              (list (car splitted) (vconcat splitted))))
+          (butlast
+           (split-string
+            (shell-command-to-string
+             (concat
+              (aws-cmd)
+              "events list-rules --output text --query 'Rules[*].[Name,State]'"))"\n")))))
+    (setq tabulated-list-format [("Name" 100) ("State" 0)])
     (setq tabulated-list-entries rows)
     (tabulated-list-init-header)
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defvar aws-events-mode-map
+(defvar aws-events-rules-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "q") 'aws)
-    (define-key map (kbd "RET") 'aws-events-rules)
+    (define-key map (kbd "q") 'aws-events)
     map))
 
-(defun aws-events ()
-  "Open the Events Mode."
+(defun aws-events-rules ()
+  "Open the Events Rules Mode."
   (interactive)
-  (aws--pop-to-buffer (aws--buffer-name "events"))
-  (aws-events-mode))
+  (aws--pop-to-buffer (aws--buffer-name "events-rules"))
+  (aws-events-rules-mode))
 
-(define-derived-mode aws-events-mode tabulated-list-mode "aws-events"
-  "AWS Events mode."
-  (setq major-mode 'aws-events-mode)
-  (use-local-map aws-events-mode-map)
-  (aws-events--list))
+(define-derived-mode aws-events-rules-mode tabulated-list-mode "aws-events-rules"
+  "AWS Events Rules mode."
+  (setq major-mode 'aws-events-rules-mode)
+  (use-local-map aws-events-rules-mode-map)
+  (aws-events-rules-list-rules))
 
-(provide 'aws-events)
-;;; aws-events.el ends here
+(provide 'aws-events-rules)
+;;; aws-events-rules.el ends here

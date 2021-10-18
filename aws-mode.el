@@ -36,6 +36,7 @@
 (require 'aws-cloudwatch)
 (require 'aws-core)
 (require 'aws-events)
+(require 'aws-events-rules)
 (require 'aws-lambda-event-source-mapping)
 (require 'aws-lambda)
 (require 'aws-log-streams)
