@@ -82,13 +82,17 @@ Use either aws-vault exec or --profile based on setting."
               " -- aws ")
     (concat "aws --profile " aws-profile)))
 
+(defun aws-select-profile ()
+  "Select the active AWS Profile."
+  (interactive)
+  (completing-read
+   "Select profile: "
+   (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
+
 (defun aws-set-profile ()
   "Set active AWS Profile."
   (interactive)
-  (setq aws-profile
-        (completing-read
-         "Select profile: "
-         (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
+  (setq aws-profile (aws-select-profile))
   (aws--last-view))
 
 (defun aws-quit ()
@@ -137,10 +141,39 @@ Use either aws-vault exec or --profile based on setting."
         ((equal aws-output "text") (aws-view-text-mode))
         (t (message "Invalid aws-output '%s' set! Choose one of ['yaml','json','text']" aws-output))))
 
+(defun aws-login ()
+  "Login to the AWS Console with a selected profile."
+  (interactive)
+  (if aws-vault
+      (let ((profile (aws-select-profile)))
+        (aws--vault-login profile))
+    (message "NOT SUPPORTED")))
+
+(defun aws-login-current-account ()
+  "Login to the AWS Console with the current profile."
+  (interactive)
+  (if aws-vault
+      (aws--vault-login aws-profile)
+    (message "NOT SUPPORTED")))
+
+(defun aws--vault-login (profile)
+  "Login to the given PROFILE via aws-vault."
+  (shell-command (concat "aws-vault login " profile)))
+
+(transient-define-prefix aws-help-popup ()
+  "AWS CloudFormation Help Menu"
+  ["Actions"
+   ("RET" "Get selected Service" aws-get-service)
+   ("L" "Login to current Account" aws-login-current-account)
+   ("P" "Set AWS Profile" aws-set-profile)
+   ("q" "Quit AWS Mode" aws-quit)])
+
 ;; MODE-MAP
 (defvar aws-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-get-service)
+    (define-key map (kbd "?")   'aws-help-popup)
+    (define-key map (kbd "L")   'aws-login-current-account)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-quit)
     map))

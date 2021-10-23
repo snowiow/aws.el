@@ -54,6 +54,7 @@ commands in the AWS CLI itself.
 
 # Features
 - Switch between your configured profiles
+- Login to the AWS UI via `aws-vault login`
 - Works with the `--profile` flag as well as aws-vault sessions
 - CloudFormation
     - List Stacks
