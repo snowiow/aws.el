@@ -50,6 +50,8 @@
 ;; aws-mode
 (evil-define-key 'normal aws-mode-map
   (kbd "RET") #'aws-get-service
+  (kbd "?")   #'aws-help-popup
+  (kbd "L")   #'aws-login-current-account
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-quit)
 
