@@ -1,6 +1,6 @@
 ;;; aws-evil.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -79,6 +79,22 @@
   (kbd "r")   #'aws-cloudwatch-alarms-describe-alarms-refresh
   (kbd "t")   #'aws-cloudwatch-alarms-enable-disable-alarm)
 
+;; aws-codebuild-mode
+(evil-define-key 'normal aws-codebuild-mode-map
+  (kbd "?")   #'aws-codebuild-help-popup
+  (kbd "RET") #'aws-codebuild--get-project
+  (kbd "P")   #'aws-set-profile
+  (kbd "q")   #'aws)
+
+;; aws-codepipeline-mode
+(evil-define-key 'normal aws-codepipeline-mode-map
+  (kbd "RET") #'aws-codepipeline--get-pipeline
+  (kbd "?") #'aws-codepipeline-help-popup
+  (kbd "e") #'aws-codepipeline--list-pipeline-executions
+  (kbd "P") #'aws-set-profile
+  (kbd "q") #'aws
+  (kbd "s") #'aws-codepipeline--get-pipeline-state)
+
 ;; aws-events-mode
 (evil-define-key 'normal aws-events-mode-map
   (kbd "RET") #'aws-events-rules
@@ -134,6 +150,7 @@
 
 ;; aws-view-mode
 (evil-define-key 'normal aws-view-mode-map
+  (kbd "RET") #'aws-view--open-under-cursor
   (kbd "q") #'kill-current-buffer)
 
 (provide 'aws-evil)

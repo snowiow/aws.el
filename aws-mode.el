@@ -1,6 +1,6 @@
 ;;; aws-mode.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -34,6 +34,8 @@
 (require 'aws-cloudformation)
 (require 'aws-cloudwatch-alarms)
 (require 'aws-cloudwatch)
+(require 'aws-codebuild)
+(require 'aws-codepipeline)
 (require 'aws-core)
 (require 'aws-events)
 (require 'aws-events-rules)
@@ -110,8 +112,10 @@ Use either aws-vault exec or --profile based on setting."
   "List available aws services."
   (interactive)
   (let ((rows (list '("cloudformation" ["cloudformation"])
-                    '("events" ["events"])
                     '("cloudwatch" ["cloudwatch"])
+                    '("codebuild" ["codebuild"])
+                    '("codepipeline" ["codepipeline"])
+                    '("events" ["events"])
                     '("lambda" ["lambda"])
                     '("logs" ["logs"])
                     '("s3" ["s3"]))))
@@ -128,6 +132,8 @@ Use either aws-vault exec or --profile based on setting."
   (let ((service (tabulated-list-get-id)))
     (cond ((equal service "cloudformation") (aws-cloudformation))
           ((equal service "cloudwatch") (aws-cloudwatch))
+          ((equal service "codebuild") (aws-codebuild))
+          ((equal service "codepipeline") (aws-codepipeline))
           ((equal service "events") (aws-events))
           ((equal service "lambda") (aws-lambda))
           ((equal service "logs") (aws-logs))
