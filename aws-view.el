@@ -1,6 +1,6 @@
 ;;; aws-view.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -31,9 +31,25 @@
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
+(defun aws-view--open-under-cursor ()
+  (interactive)
+  (let ((current-line-content
+         (string-trim
+          (buffer-substring-no-properties
+           (line-beginning-position) (line-end-position)))))
+    (when-let ((codebuild-project
+                (aws-view--yaml-get-codebuild-project current-line-content)))
+      (aws-codebuild--get-project codebuild-project))))
+
+(defun aws-view--yaml-get-codebuild-project (content)
+  (save-match-data
+    (string-match "ProjectName:\s*\\(.+\\)" content)
+    (match-string 1 content)))
+
 (defvar aws-view-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'kill-current-buffer)
+    (define-key map (kbd "RET") 'aws-view--open-under-cursor)
     map))
 
 (define-derived-mode aws-view-yaml-mode yaml-mode "aws-view-yaml"

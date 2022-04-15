@@ -1,6 +1,6 @@
 ;;; aws-lambda.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -44,8 +44,7 @@
   "Describe the Lambda Function under the cursor.
 This function is used in the AWS Lambda Mode."
   (interactive)
-  (let ((cmd "lambda get-function --function-name"))
-    (aws-core--describe-current-resource cmd)))
+  (aws-core--describe-current-resource "lambda get-function --function-name"))
 
 
 (defun aws-lambda-get-latest-logs ()

@@ -1,6 +1,6 @@
 ;;; aws-core.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -39,7 +39,8 @@ HEADER configures the column header for the tabulated-list-view."
   (let ((rows
          (mapcar
           (lambda (x)
-            (list x (vector x)))
+            (let ((trimmed-x (string-trim x)))
+                (list trimmed-x (vector trimmed-x))))
           (split-string
            (shell-command-to-string
             (concat (aws-cmd) cmd)) "\t"))))
@@ -49,9 +50,11 @@ HEADER configures the column header for the tabulated-list-view."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
-(defun aws-core--describe-current-resource (cmd)
+(defun aws-core--describe-current-resource (cmd &optional name)
   "Describe resource under cursor.  CMD is the aws command to describe the resource."
-  (let* ((current-resource (tabulated-list-get-id))
+  (let* ((current-resource (if name
+                               name
+                             (tabulated-list-get-id)))
          (service-name (car (split-string cmd)))
          (buffer (concat (aws--buffer-name service-name) ": " cmd " " current-resource "*"))
          (cmd (concat (aws-cmd)
@@ -64,7 +67,8 @@ HEADER configures the column header for the tabulated-list-view."
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
     (with-current-buffer buffer
-      (aws--get-view-mode))))
+      (aws--get-view-mode))
+    (goto-line 1)))
 
 (defun aws-core--get-current-line ()
   "Get the current line where point is."

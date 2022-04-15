@@ -1,6 +1,6 @@
 ;;; aws-log-streams.el --- Emacs major modes wrapping the AWS CLI
 
-;; Copyright (C) 2021, Marcel Patzwahl
+;; Copyright (C) 2022, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
