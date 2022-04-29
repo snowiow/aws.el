@@ -24,15 +24,13 @@
 ;; Keywords: aws cli tools
 ;; URL: https://github.com/snowiow/aws.el
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
-(require 'transient)
-
 (defvar-local aws-lambda-event-source-mapping-current-function-name nil)
 
 (defun aws-lambda-event-source-mapping-list-from-line-under-cursor ()
