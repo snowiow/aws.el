@@ -62,7 +62,8 @@
   (kbd "e") #'aws-cloudformation-describe-stack-events
   (kbd "P") #'aws-set-profile
   (kbd "q") #'aws
-  (kbd "r") #'aws-cloudformation-list-stacks-refresh)
+  (kbd "r") #'aws-cloudformation-list-stacks-refresh
+  (kbd "R") #'aws-cloudformation-describe-stack-resources)
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map

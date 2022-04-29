@@ -39,12 +39,27 @@
            (line-beginning-position) (line-end-position)))))
     (when-let ((codebuild-project
                 (aws-view--yaml-get-codebuild-project current-line-content)))
-      (aws-codebuild--get-project codebuild-project))))
+      (aws-codebuild--get-project codebuild-project))
+    (when-let ((next-token
+                (aws-view--yaml-next-token current-line-content)))
+      (aws-view--execute-last-cmd-with-extension (concat " --next-token='" next-token "'")))))
 
 (defun aws-view--yaml-get-codebuild-project (content)
   (save-match-data
     (string-match "ProjectName:\s*\\(.+\\)" content)
     (match-string 1 content)))
+
+(defun aws-view--yaml-next-token (content)
+  (save-match-data
+    (string-match "next[[:alpha:]]+Token:\s*\\([fb]\/[[:digit:]]+\\)" content)
+    (match-string 1 content)))
+
+(defun aws-view--execute-last-cmd-with-extension (ext)
+  (let ((cmd (concat aws--last-command ext)))
+    (view-mode -1)
+    (erase-buffer)
+    (call-process-shell-command cmd nil t)
+    (view-mode)))
 
 (defvar aws-view-mode-map
   (let ((map (make-sparse-keymap)))
