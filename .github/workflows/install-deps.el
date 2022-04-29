@@ -4,6 +4,6 @@
 (package-initialize)
 (package-refresh-contents)
 
-(defconst packages '(evil transient))
+(defconst packages '(evil))
 (dolist (pkg packages)
       (package-install pkg))

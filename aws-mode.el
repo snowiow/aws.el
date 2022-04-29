@@ -24,7 +24,7 @@
 ;; Keywords: aws cli tools
 ;; URL: https://github.com/snowiow/aws.el
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -63,6 +63,8 @@
   :options '('t 'nil))
 
 (fset 'aws--last-view nil)
+(setq aws--last-command nil)
+
 
 (defun aws--buffer-name (service)
   "Return aws.el buffer name.

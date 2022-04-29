@@ -24,7 +24,7 @@
 ;; Keywords: aws cli tools
 ;; URL: https://github.com/snowiow/aws.el
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -76,7 +76,8 @@ HEADER configures the column header for the tabulated-list-view."
 
 (defun aws-core--refresh-list-view (list-function &rest args)
   "Refresh the current tabulated list view.
-LIST-FUNCTION is the function to load the list and ARGS will be passed to LIST-FUNCTION if needed."
+LIST-FUNCTION is the function to load the list and ARGS will
+be passed to LIST-FUNCTION if needed."
   (message "Refreshing buffer...")
   (if (> (length args) 0)
       (funcall list-function args)
