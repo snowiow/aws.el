@@ -67,6 +67,7 @@ An optional COUNT ca be passed to limit the maximum amount of log events."
               "logs get-log-events --log-group-name '" log-group
               "' --log-stream-name '" log-stream "'"
                " --output=" aws-output)))
+    (setq aws--last-command cmd)
     (call-process-shell-command cmd nil buffer)
     (switch-to-buffer buffer)
     (with-current-buffer buffer (aws--get-view-mode))))

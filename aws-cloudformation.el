@@ -71,6 +71,11 @@ If POS is set, jump to that line in the view."
   (interactive)
   (aws-core--describe-current-resource "cloudformation describe-stack-events --stack-name"))
 
+(defun aws-cloudformation-describe-stack-resources ()
+  "Describe the CloudFormation Stack Resources of the Stack under the cursor."
+  (interactive)
+  (aws-core--describe-current-resource "cloudformation describe-stack-resources --stack-name"))
+
 (defun aws-cloudformation--delete-stack ()
   "Delete the CloudFormation Stack under the cursor."
   (interactive)
@@ -94,7 +99,8 @@ If POS is set, jump to that line in the view."
    ("e" "Describe Stack Events" aws-cloudformation-describe-stack-events)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws)
-   ("r" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)])
+   ("r" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)
+   ("R" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)])
 
 (defvar aws-cloudformation-mode-map
   (let ((map (make-sparse-keymap)))
@@ -104,6 +110,7 @@ If POS is set, jump to that line in the view."
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "r") 'aws-cloudformation-list-stacks-refresh)
+    (define-key map (kbd "R") 'aws-cloudformation-describe-stack-resources)
     map))
 
 (defun aws-cloudformation ()
