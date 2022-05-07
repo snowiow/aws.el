@@ -22,10 +22,16 @@ like I do:
 
 ```elisp
 (use-package aws-mode
+  :bind ;; some functions which make sense to bind to something
+  ("C-c a a" . aws)
+  ("C-c a l" . aws-login)
+  ("C-c a n" . aws-organizations-get-account-name)
+  ("C-c a i" . aws-organizations-get-account-id)
   :load-path "~/.emacs.d/packages/awscli"
   :custom
-  (aws-vault t)
-  (aws-output "json")) ;; optional: yaml, json, text (default: yaml)
+  (aws-vault t) ;; when t use aws-vault cmd to get into aws session
+  (aws-output "json") ;; optional: yaml, json, text (default: yaml)
+  (aws-organizations-account "root")) ;; profile of organizations account. organizations commands are automatically executed against this account, when specified
 
 (use-package aws-evil
   :after (aws-mode evil)
