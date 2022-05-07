@@ -45,6 +45,7 @@
 (require 'aws-logs)
 (require 'aws-s3)
 (require 'aws-view)
+(require 'aws-organizations)
 
 (defvar aws-profile (car
                      (split-string
@@ -77,14 +78,17 @@ SERVICE represents the currently active service"
     (get-buffer-create name))
     (pop-to-buffer-same-window name))
 
-(defun aws-cmd ()
+(defun aws-cmd (&optional profile)
   "Create the AWS base cmd with the right profile.
-Use either aws-vault exec or --profile based on setting."
-  (if aws-vault
-      (concat "aws-vault exec "
-              aws-profile
-              " -- aws ")
-    (concat "aws --profile " aws-profile)))
+Use either aws-vault exec or --profile based on setting.
+If PROFILE is passed it is used, otherwise the profile set in
+aws-profile is used."
+  (let ((profile (if profile profile aws-profile)))
+    (if aws-vault
+        (concat "aws-vault exec "
+                profile
+                " -- aws ")
+      (concat "aws --profile " profile))))
 
 (defun aws-select-profile ()
   "Select the active AWS Profile."
