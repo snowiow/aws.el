@@ -34,23 +34,10 @@
 (require 'transient)
 
 (defun aws-logs-describe-log-groups ()
-  "List all log groups by it's names."
-  (fset 'aws--last-view 'aws-logs)
-  (let* ((rows (mapcar (lambda (x)
-                      (let ((splitted (split-string x "\t")))
-                        (list (car splitted) (vconcat splitted))))
-                      (butlast
-                       (split-string
-                        (shell-command-to-string
-                         (concat
-                          (aws-cmd)
-                          "logs describe-log-groups --output=text --query 'logGroups[*].[logGroupName,storedBytes,retentionInDays,metricFilterCount]' --output text")) "\n")))))
-    ;; (message column-width)))
-    (setq tabulated-list-format [("LogGroupName" 85) ("Stored Bytes" 15) ("Retention" 10) ("Metric Filters" 5) ])
-    (setq tabulated-list-entries rows)
-    (tabulated-list-init-header)
-    (tabulated-list-print)
-    (hl-line-mode 1)))
+  (aws-core--tabulated-list-from-command-multi-column
+   "logs describe-log-groups --output=text --query 'logGroups[*].[logGroupName,storedBytes,retentionInDays,metricFilterCount]' --output text"
+   [("LogGroupName" 85) ("Stored Bytes" 15) ("Retention" 10) ("Metric Filters" 5)]
+   ))
 
 (defun aws-logs-describe-log-group ()
   (interactive)
