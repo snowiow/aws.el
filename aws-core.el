@@ -32,8 +32,19 @@
 
 ;;; Code:
 
+(defvar aws-core--tmp-file-path
+      "/tmp/awsel/")
+
+(defun aws-core-write-buffer-to-tmp-file (filename)
+  "Write the current buffer to FILENAME in /tmp/awsel/."
+  (unless (file-exists-p aws-core--tmp-file-path)
+    (make-directory aws-core--tmp-file-path))
+  (let ((filepath (concat aws-core--tmp-file-path filename)))
+    (write-region (point-min) (point-max) filepath)
+    filepath))
+
 (defun aws-core--tabulated-list-from-command (cmd header)
-  "Displays an aws service list command in a tabulated-list-view.
+  "Displays an aws service list command in a 1 column tabulated-list-view.
 CMD is the aws command to get the resources to list.
 HEADER configures the column header for the tabulated-list-view."
   (let ((rows
@@ -50,8 +61,28 @@ HEADER configures the column header for the tabulated-list-view."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+(defun aws-core--tabulated-list-from-command-multi-column (cmd header)
+  "Displays an aws service list command in a multi column tabulated-list-view.
+CMD is the aws command to get the resources to list.
+HEADER configures the column header for the tabulated-list-view."
+    (let* ((rows (mapcar (lambda (x)
+                      (let ((splitted (split-string x "\t")))
+                        (list (car splitted) (vconcat splitted))))
+                      (butlast
+                       (split-string
+                        (shell-command-to-string
+                         (concat
+                          (aws-cmd)
+                          cmd)) "\n")))))
+    (setq tabulated-list-format header)
+    (setq tabulated-list-entries rows)
+    (tabulated-list-init-header)
+    (tabulated-list-print)
+    (hl-line-mode 1)))
+
 (defun aws-core--describe-current-resource (cmd &optional name)
-  "Describe resource under cursor.  CMD is the aws command to describe the resource."
+  "Describe resource under cursor.  CMD is the aws command to describe the resource.
+If NAME is passed it's used as the currend resource to describe, otherwise the entry in tabulated-list-view is taken."
   (let* ((current-resource (if name
                                name
                              (tabulated-list-get-id)))

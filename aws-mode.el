@@ -39,6 +39,7 @@
 (require 'aws-core)
 (require 'aws-events)
 (require 'aws-events-rules)
+(require 'aws-iam)
 (require 'aws-lambda-event-source-mapping)
 (require 'aws-lambda)
 (require 'aws-log-streams)
@@ -122,6 +123,7 @@ aws-profile is used."
                     '("codebuild" ["codebuild"])
                     '("codepipeline" ["codepipeline"])
                     '("events" ["events"])
+                    '("iam" ["iam"])
                     '("lambda" ["lambda"])
                     '("logs" ["logs"])
                     '("s3" ["s3"]))))
@@ -141,6 +143,7 @@ aws-profile is used."
           ((equal service "codebuild") (aws-codebuild))
           ((equal service "codepipeline") (aws-codepipeline))
           ((equal service "events") (aws-events))
+          ((equal service "iam") (aws-iam))
           ((equal service "lambda") (aws-lambda))
           ((equal service "logs") (aws-logs))
           ((equal service "s3") (aws-s3))
@@ -198,7 +201,7 @@ aws-profile is used."
   (aws-mode))
 
 (define-derived-mode aws-mode tabulated-list-mode "aws"
-  "AWS mode"
+  "AWS mode."
   (setq major-mode 'aws-mode)
   (use-local-map aws-mode-map)
   (aws--list-services))
