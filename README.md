@@ -86,16 +86,16 @@ commands in the AWS CLI itself.
     - List S3 Buckets
     - Create Bucket
 
-## Images of selected Features
+## Features Showcases
 ### Main View with Switch Profile Auto Completion open
 ![main-view-with-switch-profile-auto-completion-open](img/main-view-with-switch-profile-auto-completion-open.png)
 ### Help Menu Lambda
 ![help-menu-lambda](img/help-menu-lambda.png)
 ### Transient View Lambda Function Invoke
 ![transient-view-lambda-function-invoke](img/transient-view-lambda-function-invoke.png)
-
+### Update Inline Policy of a Group
+https://user-images.githubusercontent.com/3718461/178152037-154b9d7f-01a3-49f3-a6a9-f3041b77fa5c.mp4
 # Configuration
-
 ## Activate aws-vault for profiles
 
 Set `(aws-vault t)` to use aws-vault to login to a profile.
