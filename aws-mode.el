@@ -40,6 +40,8 @@
 (require 'aws-events)
 (require 'aws-events-rules)
 (require 'aws-iam)
+(require 'aws-iam-groups)
+(require 'aws-iam-policies)
 (require 'aws-lambda-event-source-mapping)
 (require 'aws-lambda)
 (require 'aws-log-streams)

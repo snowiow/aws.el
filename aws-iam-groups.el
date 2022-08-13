@@ -46,6 +46,12 @@
   (let ((group (tabulated-list-get-id)))
     (aws-iam-group-inline-policies group)))
 
+(defun aws-iam-groups--list-attached-group-policies ()
+  "List attached policies for group under cursor."
+  (interactive)
+  (let ((group-name (tabulated-list-get-id)))
+    (aws-iam-policies "group" group-name)))
+
 (defun aws-iam-groups--get-group ()
   "Describe current group."
   (interactive)
@@ -57,6 +63,7 @@
   ["Actions"
    ("RET" "Get Group" aws-iam-groups--get-group)
    ("i" "List Group Inline Policies" aws-iam-groups--list-group-inline-policies)
+   ("a" "List Attached Group Policies" aws-iam-groups--list-attached-group-policies)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws-iam)])
 
@@ -66,13 +73,14 @@
     (define-key map (kbd "?") 'aws-iam-groups-help-popup)
     (define-key map (kbd "RET") 'aws-iam-groups--get-group)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "a") 'aws-iam-groups--list-attached-group-policies)
     (define-key map (kbd "i") 'aws-iam-groups--list-group-inline-policies)
     (define-key map (kbd "q") 'aws-iam)
     map))
 
 ;; MODE DEFINITION
 (defun aws-iam-groups ()
-  "Open AWS IAM Major Mode.  This presents an overview of CloudWatch subservices."
+  "Open AWS IAM Groups Major Mode.  This presents an overview of IAM subservices."
   (interactive)
   (aws--pop-to-buffer (aws--buffer-name "iam-groups"))
   (aws-iam-groups-mode))

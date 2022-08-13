@@ -31,10 +31,12 @@
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
+
 (defun aws-iam--list ()
   "List all IAM services."
   (interactive)
   (let ((rows (list '("groups" ["groups"])
+                    '("policies" ["policies"])
                     '("roles" ["roles"])
                     '("users" ["users"]))))
     (fset 'aws--last-view 'aws-iam)
@@ -49,6 +51,7 @@
   (interactive)
   (let ((service (tabulated-list-get-id)))
     (cond ((equal service "groups") (aws-iam-groups))
+          ((equal service "policies") (aws-iam-policies))
           (t (message "Hello")))))
 
 ;; MODE-MAP
