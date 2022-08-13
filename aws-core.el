@@ -96,7 +96,7 @@ If NAME is passed it's used as the currend resource to describe, otherwise the e
                       " "
                       current-resource)))
     (call-process-shell-command cmd nil buffer)
-    (switch-to-buffer buffer)
+    (pop-to-buffer buffer)
     (with-current-buffer buffer
       (aws--get-view-mode))
     (goto-line 1)))
