@@ -105,6 +105,35 @@
 (evil-define-key 'normal aws-events-rules-mode-map
   (kbd "q") #'aws-events)
 
+;; aws-iam
+(evil-define-key 'normal aws-iam-mode-map
+  (kbd "P") #'aws-set-profile
+  (kbd "RET") #'aws-iam-groups-get-service
+  (kbd "q") #'aws)
+
+;; aws-iam-group-mode
+(evil-define-key 'normal aws-iam-groups-mode-map
+  (kbd "?") #'aws-iam-groups-help-popup
+  (kbd "RET") #'aws-iam-groups--get-group
+  (kbd "P") #'aws-set-profile
+  (kbd "a") #'aws-iam-groups--list-attached-group-policies
+  (kbd "i") #'aws-iam-groups--list-group-inline-policies
+  (kbd "q") #'aws-iam)
+
+;; aws-iam-inline-policies-mode
+(evil-define-key 'normal aws-iam-group-inline-policies-mode-map
+    (kbd "?") #'aws-iam-group-inline-policies-help-popup
+    (kbd "E") #'aws-iam-group-inline-policies--edit-policy
+    (kbd "P") #'aws-set-profile
+    (kbd "q") #'aws-iam-groups)
+
+;; aws-iam-policies-mode
+(evil-define-key 'normal aws-iam-policies-mode-map
+    (kbd "?") #'aws-iam-policies-help-popup
+    (kbd "P") #'aws-set-profile
+    (kbd "E") #'aws-iam-policies--edit-policy
+    (kbd "q") #'aws-iam)
+
 ;; aws-lambda-mode
 (evil-define-key 'normal aws-lambda-mode-map
   (kbd "RET") #'aws-lambda-get-function

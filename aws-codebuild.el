@@ -38,10 +38,10 @@
    "codebuild list-projects --output=text --query projects"
    [("Projects" 100)]))
 
-(defun aws-codebuild--get-project (project-name)
+(defun aws-codebuild--get-project (codebuild-project-name)
   "Get Codebuild Project under cursor."
   (interactive)
-  (aws-core--describe-current-resource "codebuild batch-get-projects --query 'projects[0]' --names " project-name))
+  (aws-core--describe-current-resource "codebuild batch-get-projects --query 'projects[0]' --names " codebuild-project-name))
 
 ;; TRANSIENTS
 (transient-define-prefix aws-codebuild-help-popup ()
