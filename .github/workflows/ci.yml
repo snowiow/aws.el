@@ -14,8 +14,8 @@ jobs:
           - checkdoc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: purcell/setup-emacs@v3.0
+      - uses: actions/checkout@v4
+      - uses: purcell/setup-emacs@v6.0
         with:
           version: 29.1
       - name: install dependencies
