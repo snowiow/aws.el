@@ -40,7 +40,7 @@ Used in AWS Lambda Mode."
   (let ((function-name (aref (tabulated-list-get-entry) 0)))
     (aws-lambda-event-source-mapping function-name)))
 
-(defun aws-lambda-event-source-mappings-list (function-name)
+(defun aws-lambda-event-source-mapping-list (function-name)
   "List Lambda Event Sources based on the lambda FUNCTION-NAME."
   (let ((rows
          (mapcar
@@ -151,7 +151,7 @@ LAMBDA-FUNCTION is the Lambda Function Name to list the event source mappings fr
   (aws--pop-to-buffer (aws--buffer-name "lambda-event-source-mapping"))
   (aws-lambda-event-source-mapping-mode)
   (setq-local aws-lambda-event-source-mapping-current-function-name lambda-function)
-  (aws-lambda-event-source-mappings-list aws-lambda-event-source-mapping-current-function-name))
+  (aws-lambda-event-source-mapping-list aws-lambda-event-source-mapping-current-function-name))
 
 (define-derived-mode aws-lambda-event-source-mapping-mode tabulated-list-mode "aws-lambda-event-source-mapping"
   "AWS event source mapping"
