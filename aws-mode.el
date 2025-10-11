@@ -60,11 +60,15 @@
   :group 'aws
   :options '("yaml" "json" "text"))
 
-(defcustom aws-vault nil
-  "Set if aws-vault should be used for aws sessions."
+(defcustom aws-login-method 'profile
+  "Set the AWS login method to use for aws sessions.
+Options are:
+  'profile - Use aws --profile (default)
+  'vault - Use aws-vault exec
+  'sso - Use aws sso login"
   :type 'symbol
   :group 'aws
-  :options '('t 'nil))
+  :options '('profile 'vault 'sso))
 
 (fset 'aws--last-view nil)
 (setq aws--last-command nil)
@@ -83,15 +87,20 @@ SERVICE represents the currently active service"
 
 (defun aws-cmd (&optional profile)
   "Create the AWS base cmd with the right profile.
-Use either aws-vault exec or --profile based on setting.
+Use aws-vault exec, aws-sso exec, or --profile based on aws-login-method setting.
 If PROFILE is passed it is used, otherwise the profile set in
 aws-profile is used."
   (let ((profile (if profile profile aws-profile)))
-    (if aws-vault
-        (concat "aws-vault exec "
-                profile
-                " -- aws ")
-      (concat "aws --profile " profile))))
+    (cond ((eq aws-login-method 'vault)
+           (concat "aws-vault exec "
+                   profile
+                   " -- aws "))
+          ((eq aws-login-method 'sso)
+           (concat "aws-sso exec -p "
+                   profile
+                   " -- aws "))
+          (t
+           (concat "aws --profile " profile " ")))))
 
 (defun aws-select-profile ()
   "Select the active AWS Profile."
@@ -161,21 +170,31 @@ aws-profile is used."
 (defun aws-login ()
   "Login to the AWS Console with a selected profile."
   (interactive)
-  (if aws-vault
-      (let ((profile (aws-select-profile)))
-        (aws--vault-login profile))
-    (message "NOT SUPPORTED")))
+  (let ((profile (aws-select-profile)))
+    (cond ((eq aws-login-method 'vault)
+           (aws--vault-login profile))
+          ((eq aws-login-method 'sso)
+           (aws--sso-login profile))
+          (t
+           (message "Console login only supported with 'vault or 'sso login methods")))))
 
 (defun aws-login-current-account ()
   "Login to the AWS Console with the current profile."
   (interactive)
-  (if aws-vault
-      (aws--vault-login aws-profile)
-    (message "NOT SUPPORTED")))
+  (cond ((eq aws-login-method 'vault)
+         (aws--vault-login aws-profile))
+        ((eq aws-login-method 'sso)
+         (aws--sso-login aws-profile))
+        (t
+         (message "Console login only supported with 'vault or 'sso login methods"))))
 
 (defun aws--vault-login (profile)
   "Login to the given PROFILE via aws-vault."
   (shell-command (concat "aws-vault login " profile)))
+
+(defun aws--sso-login (profile)
+  "Login to the given PROFILE via aws-sso."
+  (shell-command (concat "aws-sso login -p " profile)))
 
 (transient-define-prefix aws-help-popup ()
   "AWS CloudFormation Help Menu"

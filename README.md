@@ -29,7 +29,7 @@ like I do:
   ("C-c a i" . aws-organizations-get-account-id)
   :load-path "~/.emacs.d/packages/awscli"
   :custom
-  (aws-vault t) ;; when t use aws-vault cmd to get into aws session
+  (aws-login-method 'sso) ;; options: 'profile, 'vault, 'sso (default: 'profile)
   (aws-output "json") ;; optional: yaml, json, text (default: yaml)
   (aws-organizations-account "root")) ;; profile of organizations account. organizations commands are automatically executed against this account, when specified
 
@@ -60,8 +60,8 @@ commands in the AWS CLI itself.
 
 # Features
 - Switch between your configured profiles
-- Login to the AWS UI via `aws-vault login`
-- Works with the `--profile` flag as well as aws-vault sessions
+- Login to the AWS UI via `aws-vault login` or `aws-sso login`
+- Works with the `--profile` flag as well as aws-vault and aws-sso sessions
 - CloudFormation
     - List Stacks
     - Delete Stack
@@ -96,11 +96,18 @@ commands in the AWS CLI itself.
 ### Update Inline Policy of a Group
 https://user-images.githubusercontent.com/3718461/178152037-154b9d7f-01a3-49f3-a6a9-f3041b77fa5c.mp4
 # Configuration
-## Activate aws-vault for profiles
+## Configure AWS Login Method
 
-Set `(aws-vault t)` to use aws-vault to login to a profile.
-`(aws-vault nil)` or omitting the setting uses the `--profile` flag of the AWS
-CLI itself.
+Set `aws-login-method` to choose how to authenticate with AWS:
+
+- `'profile` (default) - Use the standard `aws --profile` flag of the AWS CLI
+- `'vault` - Use `aws-vault exec` to manage credentials
+- `'sso` - Use `aws-sso exec` to manage SSO sessions
+
+Example:
+```elisp
+(setq aws-login-method 'sso)
+```
 
 # Current Limitations
 ## AWS-Vault MFA Shell Prompts don't work in aws.el
