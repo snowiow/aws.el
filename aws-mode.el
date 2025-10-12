@@ -31,6 +31,7 @@
 ;; Emacs major modes wrapping the AWS CLI
 
 ;;; Code:
+(require 'aws-bedrock)
 (require 'aws-cloudformation)
 (require 'aws-cloudwatch-alarms)
 (require 'aws-cloudwatch)
@@ -129,7 +130,8 @@ aws-profile is used."
 (defun aws--list-services ()
   "List available aws services."
   (interactive)
-  (let ((rows (list '("cloudformation" ["cloudformation"])
+  (let ((rows (list '("bedrock" ["bedrock"])
+                    '("cloudformation" ["cloudformation"])
                     '("cloudwatch" ["cloudwatch"])
                     '("codebuild" ["codebuild"])
                     '("codepipeline" ["codepipeline"])
@@ -149,7 +151,8 @@ aws-profile is used."
   "Call the respective aws service view, based on the current tabulated-list entry."
   (interactive)
   (let ((service (tabulated-list-get-id)))
-    (cond ((equal service "cloudformation") (aws-cloudformation))
+    (cond ((equal service "bedrock") (aws-bedrock))
+          ((equal service "cloudformation") (aws-cloudformation))
           ((equal service "cloudwatch") (aws-cloudwatch))
           ((equal service "codebuild") (aws-codebuild))
           ((equal service "codepipeline") (aws-codepipeline))

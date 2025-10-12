@@ -4,6 +4,6 @@
 (package-initialize)
 (package-refresh-contents)
 
-(defconst packages '(evil))
+(defconst packages '(evil markdown-mode))
 (dolist (pkg packages)
       (package-install pkg))

@@ -31,6 +31,7 @@ like I do:
   :custom
   (aws-login-method 'sso) ;; options: 'profile, 'vault, 'sso (default: 'profile)
   (aws-output "json") ;; optional: yaml, json, text (default: yaml)
+  (aws-bedrock-model "eu.anthropic.claude-sonnet-4-0-v1:0") ;; bedrock model for chat
   (aws-organizations-account "root")) ;; profile of organizations account. organizations commands are automatically executed against this account, when specified
 
 (use-package aws-evil
@@ -62,6 +63,10 @@ commands in the AWS CLI itself.
 - Switch between your configured profiles
 - Login to the AWS UI via `aws-vault login` or `aws-sso login`
 - Works with the `--profile` flag as well as aws-vault and aws-sso sessions
+- Bedrock
+    - Chat interface with configurable AI models
+    - Send messages with C-<return>
+    - Conversation history maintained within session
 - CloudFormation
     - List Stacks
     - Delete Stack
@@ -95,6 +100,8 @@ commands in the AWS CLI itself.
 ![transient-view-lambda-function-invoke](img/transient-view-lambda-function-invoke.png)
 ### Update Inline Policy of a Group
 https://user-images.githubusercontent.com/3718461/178152037-154b9d7f-01a3-49f3-a6a9-f3041b77fa5c.mp4
+### AWS Bedrock Chat
+![bedrock-chat-example](img/bedrock-chat-example.png)
 # Configuration
 ## Configure AWS Login Method
 
@@ -108,6 +115,16 @@ Example:
 ```elisp
 (setq aws-login-method 'sso)
 ```
+
+## Configure Bedrock Model
+
+Set `aws-bedrock-model` to choose which AI model to use for Bedrock chat:
+
+```elisp
+(setq aws-bedrock-model "eu.anthropic.claude-sonnet-4-0-v1:0")
+```
+
+Default is `"eu.anthropic.claude-sonnet-4-5-20250929-v1:0"`. Other options include Claude 3.5 Sonnet, Claude 3 Haiku, or any other Bedrock model available in your region. To get a list of enabled models use this command for now: `aws bedrock list-foundation-models --query 'modelSummaries[].modelId' --output text` and override the variable with the foundation-model-id you want to use. Later it's planned to change the model within aws-mode.
 
 # Current Limitations
 ## AWS-Vault MFA Shell Prompts don't work in aws.el
