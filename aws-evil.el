@@ -183,5 +183,17 @@
   (kbd "RET") #'aws-view--open-under-cursor
   (kbd "q") #'kill-current-buffer)
 
+;; aws-bedrock-mode
+(with-eval-after-load 'aws-bedrock
+  (evil-define-key 'normal aws-bedrock-mode-map
+    (kbd "?") #'aws-bedrock-help-popup
+    (kbd "c") #'aws-bedrock-clear-chat
+    (kbd "P") #'aws-set-profile
+    (kbd "q") #'aws
+    (kbd "i") #'aws-bedrock-insert-mode)
+
+  (evil-define-key 'insert aws-bedrock-mode-map
+    (kbd "C-<return>") #'aws-bedrock-send-input))
+
 (provide 'aws-evil)
 ;;; aws-evil.el ends here
