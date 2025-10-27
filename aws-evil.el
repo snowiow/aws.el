@@ -178,6 +178,13 @@
   (kbd "q") #'aws
   (kbd "r") #'aws-s3-lb-refresh)
 
+;; aws-sns-mode
+(evil-define-key 'normal aws-sns-mode-map
+  (kbd "?") #'aws-sns-help-popup
+  (kbd "y") #'aws-sns-copy-arn
+  (kbd "P") #'aws-set-profile
+  (kbd "q") #'aws)
+
 ;; aws-view-mode
 (evil-define-key 'normal aws-view-mode-map
   (kbd "RET") #'aws-view--open-under-cursor

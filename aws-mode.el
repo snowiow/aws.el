@@ -48,6 +48,7 @@
 (require 'aws-log-streams)
 (require 'aws-logs)
 (require 'aws-s3)
+(require 'aws-sns)
 (require 'aws-view)
 (require 'aws-organizations)
 
@@ -139,7 +140,8 @@ aws-profile is used."
                     '("iam" ["iam"])
                     '("lambda" ["lambda"])
                     '("logs" ["logs"])
-                    '("s3" ["s3"]))))
+                    '("s3" ["s3"])
+                    '("sns" ["sns"]))))
     (fset 'aws--last-view 'aws)
     (setq tabulated-list-format [("Services" 100)])
     (setq tabulated-list-entries rows)
@@ -161,6 +163,7 @@ aws-profile is used."
           ((equal service "lambda") (aws-lambda))
           ((equal service "logs") (aws-logs))
           ((equal service "s3") (aws-s3))
+          ((equal service "sns") (aws-sns))
           (t (message "Hello")))))
 
 (defun aws--get-view-mode ()
