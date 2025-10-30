@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -60,9 +55,9 @@
   (kbd "?") #'aws-cloudformation-help-popup
   (kbd "d") #'aws-cloudformation--delete-stack
   (kbd "e") #'aws-cloudformation-describe-stack-events
+  (kbd "g") #'aws-cloudformation-list-stacks-refresh
   (kbd "P") #'aws-set-profile
   (kbd "q") #'aws
-  (kbd "r") #'aws-cloudformation-list-stacks-refresh
   (kbd "R") #'aws-cloudformation-describe-stack-resources)
 
 ;; aws-cloudwatch-mode
@@ -75,9 +70,9 @@
 (evil-define-key 'normal aws-cloudwatch-alarms-mode-map
   (kbd "RET") #'aws-cloudwatch-describe-alarm
   (kbd "?")   #'aws-cloudwatch-alarms-help-popup
+  (kbd "g")   #'aws-cloudwatch-alarms-describe-alarms-refresh
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-cloudwatch
-  (kbd "r")   #'aws-cloudwatch-alarms-describe-alarms-refresh
   (kbd "t")   #'aws-cloudwatch-alarms-enable-disable-alarm)
 
 ;; aws-codebuild-mode
@@ -138,7 +133,9 @@
 (evil-define-key 'normal aws-lambda-mode-map
   (kbd "RET") #'aws-lambda-get-function
   (kbd "?")   #'aws-lambda-help-popup
+  (kbd "d")   #'aws-lambda-delete-function-under-cursor
   (kbd "e")   #'aws-lambda-event-source-mapping-list-from-line-under-cursor
+  (kbd "g")   #'aws-lambda-list-functions-refresh
   (kbd "i")   #'aws-lambda-invoke-popup
   (kbd "L")   #'aws-lambda-get-latest-logs
   (kbd "l")   #'aws-lambda-describe-log-streams
@@ -150,9 +147,9 @@
 (evil-define-key 'normal aws-lambda-event-source-mapping-mode-map
   (kbd "RET") #'aws--lambda-get-event-source-mapping
   (kbd "?")   #'aws-lambda-event-source-mapping-help-popup
+  (kbd "g")   #'aws-lambda-event-source-mapping-list-refresh
   (kbd "P")   #'aws-set-profile
   (kbd "q")   #'aws-lambda
-  (kbd "r")   #'aws-lambda-event-source-mapping-list-refresh
   (kbd "u")   #'aws-lambda-event-source-mapping-update-popup)
 
 ;; aws-logs-mode
@@ -173,10 +170,10 @@
 (evil-define-key 'normal aws-s3-mode-map
   (kbd "d") #'aws-s3-rb-under-cursor
   (kbd "?") #'aws-s3-help-popup
+  (kbd "g") #'aws-s3-lb-refresh
   (kbd "m") #'aws-s3-mb
   (kbd "P") #'aws-set-profile
-  (kbd "q") #'aws
-  (kbd "r") #'aws-s3-lb-refresh)
+  (kbd "q") #'aws)
 
 ;; aws-sns-mode
 (evil-define-key 'normal aws-sns-mode-map

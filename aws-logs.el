@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -36,8 +31,7 @@
 (defun aws-logs-describe-log-groups ()
   (aws-core--tabulated-list-from-command-multi-column
    "logs describe-log-groups --output=text --query 'logGroups[*].[logGroupName,storedBytes,retentionInDays,metricFilterCount]' --output text"
-   [("LogGroupName" 85) ("Stored Bytes" 15) ("Retention" 10) ("Metric Filters" 5)]
-   ))
+   [("LogGroupName" 85) ("Stored Bytes" 15) ("Retention" 10) ("Metric Filters" 5)]))
 
 (defun aws-logs-describe-log-group ()
   (interactive)
@@ -63,6 +57,7 @@
     (define-key map (kbd "s")   'aws-log-streams-from-line-under-cursor)
     map))
 
+;;;###autoload
 (defun aws-logs ()
   (interactive)
   (aws--pop-to-buffer (aws--buffer-name "logs"))

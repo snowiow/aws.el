@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -310,6 +305,7 @@ For non-evil users, this just moves to the input area."
     (define-key map (kbd "C-<return>") 'aws-bedrock-send-input)
     map))
 
+;;;###autoload
 (defun aws-bedrock ()
   "Open the AWS Bedrock chat interface."
   (interactive)

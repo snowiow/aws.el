@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -70,6 +65,7 @@
     (define-key map (kbd "s") 'aws-codepipeline--get-pipeline-state)
     map))
 
+;;;###autoload
 (defun aws-codepipeline ()
   "Open the AWS Codepipeline Mode."
   (interactive)

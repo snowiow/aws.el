@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -58,7 +53,7 @@
   (interactive "sBucket Name: s3://")
   (let ((output (shell-command-to-string (concat (aws-cmd) "s3 mb s3://" bucket-name))))
     (aws-s3-lb-refresh)
-    (message (s-trim output))))
+    (message (string-trim output))))
 
 (defun aws-s3-rb (bucket-name)
   "Remove given Bucket.  --force is always used.
@@ -71,7 +66,7 @@ BUCKET-NAME is the name of the Bucket to be deleted."
     (let ((output (shell-command-to-string
                    (concat (aws-cmd) "s3 rb --force s3://" bucket-name))))
       (aws-s3-lb-refresh)
-      (message (s-trim output)))))
+      (message (string-trim output)))))
 
 (defun aws-s3-rb-under-cursor ()
   "Remove the Bucket under the cursor in the S3 Overview."
@@ -84,21 +79,23 @@ BUCKET-NAME is the name of the Bucket to be deleted."
   "AWS S3 Help Menu"
   ["Actions"
    ("d" "Delete Bucket" aws-s3-rb-under-cursor)
+   ("g" "Refresh Buffer" aws-s3-lb-refresh)
    ("m" "Make Bucket" aws-s3-mb)
    ("P" "Set AWS Profile" aws-set-profile)
-   ("q" "Services" aws)
-   ("r" "Refresh Buffer" aws-s3-lb-refresh)])
+   ("q" "Services" aws)])
 
 (defvar aws-s3-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "?") 'aws-s3-help-popup)
     (define-key map (kbd "d") 'aws-s3-rb-under-cursor)
+    (define-key map (kbd "g") 'aws-s3-lb-refresh)
     (define-key map (kbd "m") 'aws-s3-mb)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "r") 'aws-s3-lb-refresh)
     map))
 
+;;;###autoload
 (defun aws-s3 ()
   "Open the S3 Mode."
   (interactive)
