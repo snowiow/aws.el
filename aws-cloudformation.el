@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -97,9 +92,9 @@ If POS is set, jump to that line in the view."
   ["Actions"
    ("d" "Delete Stack" aws-cloudformation--delete-stack)
    ("e" "Describe Stack Events" aws-cloudformation-describe-stack-events)
+   ("g" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)
    ("P" "Set AWS Profile" aws-set-profile)
    ("q" "Service Overview" aws)
-   ("r" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)
    ("R" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)])
 
 (defvar aws-cloudformation-mode-map
@@ -107,12 +102,13 @@ If POS is set, jump to that line in the view."
     (define-key map (kbd "?") 'aws-cloudformation-help-popup)
     (define-key map (kbd "d") 'aws-cloudformation--delete-stack)
     (define-key map (kbd "e") 'aws-cloudformation-describe-stack-events)
+    (define-key map (kbd "g") 'aws-cloudformation-list-stacks-refresh)
     (define-key map (kbd "P") 'aws-set-profile)
     (define-key map (kbd "q") 'aws)
-    (define-key map (kbd "r") 'aws-cloudformation-list-stacks-refresh)
     (define-key map (kbd "R") 'aws-cloudformation-describe-stack-resources)
     map))
 
+;;;###autoload
 (defun aws-cloudformation ()
   "Open the CloudFormation Mode."
   (interactive)

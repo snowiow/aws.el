@@ -1,6 +1,6 @@
-;;; aws-mode.el --- Emacs major modes wrapping the AWS CLI
+;;; aws.el --- Emacs major modes wrapping the AWS CLI -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022, Marcel Patzwahl
+;; Copyright (C) 2022-2025, Marcel Patzwahl
 
 ;; This file is NOT part of Emacs.
 
@@ -21,23 +21,36 @@
 
 ;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
+;; Keywords: tools convenience
 ;; URL: https://github.com/snowiow/aws.el
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
+;; Package-Requires: ((emacs "28.1") (transient "0.3.0"))
 
 ;;; Commentary:
 
-;; Emacs major modes wrapping the AWS CLI
+;; aws.el provides a magit-style interface to the AWS CLI.
+;;
+;; This package makes heavy use of the transient package and
+;; tabulated-list-mode to make the AWS command line interface as
+;; discoverable, easy and fast to navigate as possible.
+;;
+;; Usage:
+;;   M-x aws  - Open the AWS service overview
+;;   M-x aws-login - Login to AWS Console
+;;
+;; You can customize the behavior with:
+;;   `aws-output' - Output format (yaml, json, or text)
+;;   `aws-login-method' - Login method (profile, vault, or sso)
 
 ;;; Code:
-(require 'aws-bedrock)
+(require 'transient)
+(require 'aws-core)
+(require 'aws-view)
 (require 'aws-cloudformation)
 (require 'aws-cloudwatch-alarms)
 (require 'aws-cloudwatch)
 (require 'aws-codebuild)
 (require 'aws-codepipeline)
-(require 'aws-core)
 (require 'aws-events)
 (require 'aws-events-rules)
 (require 'aws-iam)
@@ -49,31 +62,65 @@
 (require 'aws-logs)
 (require 'aws-s3)
 (require 'aws-sns)
-(require 'aws-view)
 (require 'aws-organizations)
 
-(defvar aws-profile (car
-                     (split-string
-                      (shell-command-to-string "aws configure list-profiles") "\n")))
+;; Optional: Bedrock requires markdown-mode
+(when (require 'markdown-mode nil t)
+  (require 'aws-bedrock nil t))
+
+;;; Customization
+
+(defgroup aws nil
+  "Interface to AWS CLI."
+  :prefix "aws-"
+  :group 'tools
+  :link '(url-link :tag "GitHub" "https://github.com/snowiow/aws.el"))
 
 (defcustom aws-output "yaml"
-  "Defines in which format aws outputs are represented."
-  :type '(string)
-  :group 'aws
-  :options '("yaml" "json" "text"))
+  "Format for AWS command outputs.
+Valid options are yaml, json, or text."
+  :type '(choice (const :tag "YAML" "yaml")
+                 (const :tag "JSON" "json")
+                 (const :tag "Text" "text"))
+  :group 'aws)
 
 (defcustom aws-login-method 'profile
-  "Set the AWS login method to use for aws sessions.
+  "AWS login method to use for authentication.
 Options are:
-  'profile - Use aws --profile (default)
-  'vault - Use aws-vault exec
-  'sso - Use aws sso login"
-  :type 'symbol
-  :group 'aws
-  :options '('profile 'vault 'sso))
+  `profile' - Use aws --profile (default)
+  `vault' - Use aws-vault exec
+  `sso' - Use aws sso login"
+  :type '(choice (const :tag "AWS Profile" profile)
+                 (const :tag "AWS Vault" vault)
+                 (const :tag "AWS SSO" sso))
+  :group 'aws)
+
+(defvar aws-profile nil
+  "Currently active AWS profile.")
+
+(defvar aws--last-view nil
+  "Function to call to refresh the last view.")
+
+(defvar aws--last-command nil
+  "Last AWS command executed.")
+
+;;; Helper Functions
+
+(defun aws--check-cli-installed ()
+  "Check if AWS CLI is installed and available.
+Signal an error if not found."
+  (unless (executable-find "aws")
+    (user-error "AWS CLI not found.  Please install it from https://aws.amazon.com/cli/")))
+
+(defun aws--initialize-profile ()
+  "Initialize aws-profile if not already set."
+  (unless aws-profile
+    (aws--check-cli-installed)
+    (setq aws-profile (car
+                       (split-string
+                        (shell-command-to-string "aws configure list-profiles") "\n")))))
 
 (fset 'aws--last-view nil)
-(setq aws--last-command nil)
 
 
 (defun aws--buffer-name (service)
@@ -92,6 +139,7 @@ SERVICE represents the currently active service"
 Use aws-vault exec, aws-sso exec, or --profile based on aws-login-method setting.
 If PROFILE is passed it is used, otherwise the profile set in
 aws-profile is used."
+  (aws--initialize-profile)
   (let ((profile (if profile profile aws-profile)))
     (cond ((eq aws-login-method 'vault)
            (concat "aws-vault exec "
@@ -131,17 +179,19 @@ aws-profile is used."
 (defun aws--list-services ()
   "List available aws services."
   (interactive)
-  (let ((rows (list '("bedrock" ["bedrock"])
-                    '("cloudformation" ["cloudformation"])
-                    '("cloudwatch" ["cloudwatch"])
-                    '("codebuild" ["codebuild"])
-                    '("codepipeline" ["codepipeline"])
-                    '("events" ["events"])
-                    '("iam" ["iam"])
-                    '("lambda" ["lambda"])
-                    '("logs" ["logs"])
-                    '("s3" ["s3"])
-                    '("sns" ["sns"]))))
+  (let ((rows (append
+               (when (featurep 'aws-bedrock)
+                 '(("bedrock" ["bedrock"])))
+               '(("cloudformation" ["cloudformation"])
+                 ("cloudwatch" ["cloudwatch"])
+                 ("codebuild" ["codebuild"])
+                 ("codepipeline" ["codepipeline"])
+                 ("events" ["events"])
+                 ("iam" ["iam"])
+                 ("lambda" ["lambda"])
+                 ("logs" ["logs"])
+                 ("s3" ["s3"])
+                 ("sns" ["sns"])))))
     (fset 'aws--last-view 'aws)
     (setq tabulated-list-format [("Services" 100)])
     (setq tabulated-list-entries rows)
@@ -173,9 +223,11 @@ aws-profile is used."
         ((equal aws-output "text") (aws-view-text-mode))
         (t (message "Invalid aws-output '%s' set! Choose one of ['yaml','json','text']" aws-output))))
 
+;;;###autoload
 (defun aws-login ()
   "Login to the AWS Console with a selected profile."
   (interactive)
+  (aws--check-cli-installed)
   (let ((profile (aws-select-profile)))
     (cond ((eq aws-login-method 'vault)
            (aws--vault-login profile))
@@ -221,9 +273,12 @@ aws-profile is used."
     map))
 
 ;; MODE DEFINITION
+;;;###autoload
 (defun aws ()
   "Open AWS Major Mode.  This presents a service overview."
   (interactive)
+  (aws--check-cli-installed)
+  (aws--initialize-profile)
   (aws--pop-to-buffer (aws--buffer-name "services"))
   (aws-mode))
 
@@ -234,4 +289,5 @@ aws-profile is used."
   (aws--list-services))
 
 (provide 'aws-mode)
-;;; aws-mode.el ends here
+(provide 'aws)
+;;; aws.el ends here

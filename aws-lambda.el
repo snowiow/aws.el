@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -40,12 +35,16 @@
    "lambda list-functions --output=text --query 'Functions[*].FunctionName'"
    [("Functions" 100)]))
 
+(defun aws-lambda-list-functions-refresh ()
+  "Refresh the Lambda Functions Overview and jump to the last position."
+  (interactive)
+  (aws-core--refresh-list-view 'aws-lambda--list-functions))
+
 (defun aws-lambda-get-function ()
   "Describe the Lambda Function under the cursor.
 This function is used in the AWS Lambda Mode."
   (interactive)
   (aws-core--describe-current-resource "lambda get-function --function-name"))
-
 
 (defun aws-lambda-get-latest-logs ()
   "Get the latest logs of the Lambda Function under the cursor.
@@ -99,11 +98,32 @@ ARGS represent the arguments set in the transient."
          (outfile-path (aws-lambda--tmp-outfile function-name)))
     (switch-to-buffer (find-file-other-window outfile-path))))
 
+(defun aws-lambda-delete-function (function-name)
+  "Delete the Lambda Function FUNCTION-NAME."
+  (interactive "sLambda Function Name: ")
+  (when (yes-or-no-p (concat
+                      "Are you sure you want to delete the Lambda Function "
+                      function-name
+                      "?"))
+    (let ((output (shell-command-to-string
+                   (concat (aws-cmd) "lambda delete-function --function-name " function-name))))
+      (aws-lambda-list-functions-refresh)
+      (if (string-empty-p output)
+          (message "Deleted Lambda Function %s." function-name)
+          (message "Error deleting Lambda Function %s. Output: %s" function-name output)))))
+
+(defun aws-lambda-delete-function-under-cursor ()
+  "Delete the Lambda Function under the cursor."
+  (interactive)
+  (let ((function-name (tabulated-list-get-id)))
+    (aws-lambda-delete-function function-name)))
+
 ;; TRANSIENTS
 (transient-define-prefix aws-lambda-help-popup ()
   "AWS Lambda Menu"
   ["Actions"
    ("RET" "Get Function" aws-lambda-get-function)
+   ("d" "Delete Function" aws-lambda-delete-function-under-cursor)
    ("e" "List Event Sources" aws-lambda-event-source-mapping-list-from-line-under-cursor)
    ("i" "Invoke Function" aws-lambda-invoke-popup)
    ("l" "Get log streams" aws-lambda-describe-log-streams)
@@ -143,7 +163,9 @@ ARGS represent the arguments set in the transient."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-lambda-get-function)
     (define-key map (kbd "?") 'aws-lambda-help-popup)
+    (define-key map (kbd "d") 'aws-lambda-delete-function-under-cursor)
     (define-key map (kbd "e") 'aws-lambda-event-source-mapping-list-from-line-under-cursor)
+    (define-key map (kbd "g") 'aws-lambda-list-functions-refresh)
     (define-key map (kbd "i") 'aws-lambda-invoke-popup)
     (define-key map (kbd "l") 'aws-lambda-describe-log-streams)
     (define-key map (kbd "L") 'aws-lambda-get-latest-logs)
@@ -152,6 +174,7 @@ ARGS represent the arguments set in the transient."
     (define-key map (kbd "q") 'aws)
     map))
 
+;;;###autoload
 (defun aws-lambda ()
   "Open the AWS Lambda Mode."
   (interactive)

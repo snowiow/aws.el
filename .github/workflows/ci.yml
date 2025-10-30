@@ -3,14 +3,12 @@ name: CI
 on: push
 
 jobs:
-  lint:
+  lint-all-files:
     strategy:
       matrix:
         elisp-check:
           - load-file
           - byte-compile
-          - melpa
-          - package-lint
           - checkdoc
     runs-on: ubuntu-latest
     steps:
@@ -21,11 +19,43 @@ jobs:
       - name: install dependencies
         run: |
           emacs -Q --batch -l .github/workflows/install-deps.el
-      - name: run linter
+      - name: run linter on all files
         uses: leotaku/elisp-check@v1.3
         with:
           check: ${{ matrix.elisp-check }}
           file: "*.el"
+
+  lint-main-file:
+    strategy:
+      matrix:
+        elisp-check:
+          - melpa
+          - package-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: purcell/setup-emacs@v7.0
+        with:
+          version: 29.1
+      - name: install dependencies
+        run: |
+          emacs -Q --batch -l .github/workflows/install-deps.el
+      - name: run linter on main package file
+        uses: leotaku/elisp-check@v1.3
+        with:
+          check: ${{ matrix.elisp-check }}
+          file: "aws.el"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: purcell/setup-emacs@v7.0
+        with:
+          version: 29.1
+      - name: install dependencies
+        run: |
+          emacs -Q --batch -l .github/workflows/install-deps.el
       - name: run tests
         uses: leotaku/elisp-check@v1.3
         with:

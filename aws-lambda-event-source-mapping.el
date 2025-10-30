@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -98,9 +93,9 @@ ARGS represent the arguments set in the transient."
 (transient-define-prefix aws-lambda-event-source-mapping-help-popup ()
   ["Actions"
    ("RET" "Get Event Source Mapping" aws--lambda-get-event-source-mapping)
-   ("q" "Lambdas" aws-lambda)
-   ("r" "Refresh Buffer" aws-lambda-event-source-mapping-list-refresh)
+   ("g" "Refresh Buffer" aws-lambda-event-source-mapping-list-refresh)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("q" "Lambdas" aws-lambda)
    ("u" "Update Event Source Mapping" aws-lambda-event-source-mapping-update-popup)])
 
 (transient-define-prefix aws-lambda-event-source-mapping-update-popup ()
@@ -138,9 +133,9 @@ ARGS represent the arguments set in the transient."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws--lambda-get-event-source-mapping)
     (define-key map (kbd "?")   'aws-lambda-event-source-mapping-help-popup)
+    (define-key map (kbd "g")   'aws-lambda-event-source-mapping-list-refresh)
     (define-key map (kbd "q")   'aws-lambda)
     (define-key map (kbd "P")   'aws-set-profile)
-    (define-key map (kbd "r")   'aws-lambda-event-source-mapping-list-refresh)
     (define-key map (kbd "u")   'aws-lambda-event-source-mapping-update)
     map))
 

@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -64,6 +59,7 @@
     map))
 
 ;; MODE DEFINITION
+;;;###autoload
 (defun aws-iam ()
   "Open AWS IAM Major Mode.  This presents an overview of CloudWatch subservices."
   (interactive)

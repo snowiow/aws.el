@@ -19,12 +19,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-;; Version: 1.0
 ;; Author: Marcel Patzwahl
-;; Keywords: aws cli tools
-;; URL: https://github.com/snowiow/aws.el
-;; License: GNU General Public License >= 3
-;; Package-Requires: ((emacs "28.1"))
 
 ;;; Commentary:
 
@@ -104,18 +99,18 @@ Disable if it's enabled and enable if it's disabled."
   "AWS CloudWatch Alarm Menu"
   ["Actions"
    ("RET" "Describe Alarm"      aws-cloudwatch-alarms-describe-alarm)
+   ("g" "Refresh Buffer"        aws-cloudwatch-alarms-describe-alarms-refresh)
    ("P" "Set AWS Profile"       aws-set-profile)
    ("q" "CloudWatch Overview"   aws-cloudwatch)
-   ("r" "Refresh Buffer"        aws-cloudwatch-alarms-describe-alarms-refresh)
    ("t" "Toggle ActionsEnabled" aws-cloudwatch-alarms-enable-disable-alarm)])
 
 (defvar aws-cloudwatch-alarms-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-cloudwatch-alarms-describe-alarm)
     (define-key map (kbd "?")   'aws-cloudwatch-alarms-help-popup)
+    (define-key map (kbd "g")   'aws-cloudwatch-alarms-describe-alarms-refresh)
     (define-key map (kbd "P")   'aws-set-profile)
     (define-key map (kbd "q")   'aws-cloudwatch)
-    (define-key map (kbd "r")   'aws-cloudwatch-alarms-describe-alarms-refresh)
     (define-key map (kbd "t")   'aws-cloudwatch-alarms-enable-disable-alarm)
     map))
 
