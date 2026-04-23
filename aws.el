@@ -152,6 +152,7 @@ aws-profile is used."
           (t
            (concat "aws --profile " profile " ")))))
 
+;;;###autoload
 (defun aws-select-profile ()
   "Select the active AWS Profile."
   (interactive)
@@ -159,11 +160,14 @@ aws-profile is used."
    "Select profile: "
    (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
 
+;;;###autoload
 (defun aws-set-profile ()
   "Set active AWS Profile."
   (interactive)
   (setq aws-profile (aws-select-profile))
-  (aws--last-view))
+  (setenv "AWS_PROFILE" aws-profile)
+  (when (functionp aws--last-view)
+    (aws--last-view)))
 
 (defun aws-quit ()
   "Quits the aws major mode by killing all it's open buffers."
