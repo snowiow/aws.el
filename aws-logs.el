@@ -47,7 +47,9 @@
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
    ("s" "Get Log Streams" aws-log-streams-from-line-under-cursor)
-   ("q" "Service Overview" aws)])
+   ("q" "Service Overview" aws)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-logs-mode-map
   (let ((map (make-sparse-keymap)))

@@ -326,7 +326,9 @@ aws-profile is used."
    ("L" "Login to current Account" aws-login-current-account)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Quit AWS Mode" aws-quit)])
+   ("q" "Quit AWS Mode" aws-quit)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 ;; MODE-MAP
 (defvar aws-mode-map

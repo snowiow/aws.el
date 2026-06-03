@@ -83,7 +83,9 @@ BUCKET-NAME is the name of the Bucket to be deleted."
    ("m" "Make Bucket" aws-s3-mb)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Services" aws)])
+   ("q" "Services" aws)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-s3-mode-map
   (let ((map (make-sparse-keymap)))

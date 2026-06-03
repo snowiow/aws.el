@@ -45,7 +45,9 @@
    ("RET" "Get Codebuild Project" aws-codebuild--get-project)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Service Overview" aws)])
+   ("q" "Service Overview" aws)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-codebuild-mode-map
   (let ((map (make-sparse-keymap)))

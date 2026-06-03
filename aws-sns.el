@@ -71,7 +71,9 @@ ARN should be in the format: arn:aws:sns:region:account-id:topic-name"
    ("y" "Copy ARN" aws-sns-copy-arn)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Service Overview" aws)])
+   ("q" "Service Overview" aws)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-sns-mode-map
   (let ((map (make-sparse-keymap)))

@@ -103,7 +103,9 @@ Disable if it's enabled and enable if it's disabled."
    ("P" "Set AWS Profile"       aws-set-profile)
    ("R" "Set AWS Region"       aws-set-region)
    ("q" "CloudWatch Overview"   aws-cloudwatch)
-   ("t" "Toggle ActionsEnabled" aws-cloudwatch-alarms-enable-disable-alarm)])
+   ("t" "Toggle ActionsEnabled" aws-cloudwatch-alarms-enable-disable-alarm)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-cloudwatch-alarms-mode-map
   (let ((map (make-sparse-keymap)))
