@@ -61,6 +61,7 @@ commands in the AWS CLI itself.
 
 # Features
 - Switch between your configured profiles
+- Switch between AWS regions with `R`
 - Login to the AWS UI via `aws-vault login` or `aws-sso login`
 - Works with the `--profile` flag as well as aws-vault and aws-sso sessions
 - Bedrock

@@ -44,6 +44,7 @@
   ["Actions"
    ("RET" "Get Codebuild Project" aws-codebuild--get-project)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws)])
 
 (defvar aws-codebuild-mode-map
@@ -51,6 +52,7 @@
     (define-key map (kbd "?") 'aws-codebuild-help-popup)
     (define-key map (kbd "RET") 'aws-codebuild--get-project)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws)
     map))
 

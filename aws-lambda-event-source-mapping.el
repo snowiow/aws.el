@@ -95,6 +95,7 @@ ARGS represent the arguments set in the transient."
    ("RET" "Get Event Source Mapping" aws--lambda-get-event-source-mapping)
    ("g" "Refresh Buffer" aws-lambda-event-source-mapping-list-refresh)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Lambdas" aws-lambda)
    ("u" "Update Event Source Mapping" aws-lambda-event-source-mapping-update-popup)])
 
@@ -136,6 +137,7 @@ ARGS represent the arguments set in the transient."
     (define-key map (kbd "g")   'aws-lambda-event-source-mapping-list-refresh)
     (define-key map (kbd "q")   'aws-lambda)
     (define-key map (kbd "P")   'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "u")   'aws-lambda-event-source-mapping-update)
     map))
 

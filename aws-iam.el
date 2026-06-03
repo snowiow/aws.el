@@ -54,6 +54,7 @@
   (let ((map (make-sparse-keymap)))
     ;; (define-key map (kbd "RET") 'aws-cloudwatch-alarms)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "RET") 'aws-iam-groups-get-service)
     (define-key map (kbd "q") 'aws)
     map))

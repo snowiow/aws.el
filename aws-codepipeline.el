@@ -52,6 +52,7 @@
    ("RET" "Get Pipeline" aws)
    ("e" "List Pipeline Executions" aws-codepipeline--list-pipeline-executions)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws-codepipeline--get-pipeline)
    ("s" "Get Pipeline State" aws-codepipeline--get-pipeline-state)])
 
@@ -62,6 +63,7 @@
     (define-key map (kbd "e") 'aws-codepipeline--list-pipeline-executions)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "s") 'aws-codepipeline--get-pipeline-state)
     map))
 

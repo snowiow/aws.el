@@ -45,6 +45,7 @@
   ["Actions"
    ("RET" "Describe Log Group" aws-logs-describe-log-group)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("s" "Get Log Streams" aws-log-streams-from-line-under-cursor)
    ("q" "Service Overview" aws)])
 
@@ -53,6 +54,7 @@
     (define-key map (kbd "RET") 'aws-logs-describe-log-group)
     (define-key map (kbd "?")   'aws-logs-help-popup)
     (define-key map (kbd "P")   'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q")   'aws)
     (define-key map (kbd "s")   'aws-log-streams-from-line-under-cursor)
     map))

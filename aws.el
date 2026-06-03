@@ -92,14 +92,30 @@ Options are:
   `sso' - Use aws sso login"
   :type '(choice (const :tag "AWS Profile" profile)
                  (const :tag "AWS Vault" vault)
-                 (const :tag "AWS SSO" sso))
+                 (const :tag "AWS-SSO-CLI" sso))
   :group 'aws)
 
 (defvar aws-profile nil
   "Currently active AWS profile.")
 
+(defvar aws-region nil
+  "Currently active AWS region.")
+
 (defvar aws--last-view nil
   "Function to call to refresh the last view.")
+
+(defcustom aws-regions
+  '("us-east-1" "us-east-2" "us-west-1" "us-west-2"
+    "af-south-1" "ap-east-1" "ap-south-1" "ap-south-2"
+    "ap-southeast-1" "ap-southeast-2" "ap-southeast-3" "ap-southeast-4"
+    "ap-northeast-1" "ap-northeast-2" "ap-northeast-3"
+    "ca-central-1" "ca-west-1" "eu-central-1" "eu-central-2"
+    "eu-west-1" "eu-west-2" "eu-west-3" "eu-south-1" "eu-south-2"
+    "eu-north-1" "il-central-1" "me-central-1" "me-south-1"
+    "sa-east-1")
+  "AWS regions offered for completion by `aws-set-region'."
+  :type '(repeat string)
+  :group 'aws)
 
 (defvar aws--last-command nil
   "Last AWS command executed.")
@@ -118,7 +134,30 @@ Signal an error if not found."
     (aws--check-cli-installed)
     (setq aws-profile (car
                        (split-string
-                        (shell-command-to-string "aws configure list-profiles") "\n")))))
+                        (shell-command-to-string "aws configure list-profiles") "\n"))))
+  (aws--initialize-region))
+
+(defun aws--non-empty-string (value)
+  "Return VALUE if it is a non-empty string."
+  (when (and (stringp value)
+             (not (string-empty-p value)))
+    value))
+
+(defun aws--initialize-region ()
+  "Initialize `aws-region' if not already set."
+  (unless aws-region
+    (setq aws-region
+          (or (aws--non-empty-string (getenv "AWS_REGION"))
+              (aws--non-empty-string (getenv "AWS_DEFAULT_REGION"))
+              (let ((configured-region
+                     (string-trim
+                      (shell-command-to-string
+                       (if aws-profile
+                           (format "aws configure get region --profile %s"
+                                   (shell-quote-argument aws-profile))
+                         "aws configure get region")))))
+                (aws--non-empty-string configured-region))
+              (car aws-regions)))))
 
 (fset 'aws--last-view nil)
 
@@ -126,7 +165,7 @@ Signal an error if not found."
 (defun aws--buffer-name (service)
   "Return aws.el buffer name.
 SERVICE represents the currently active service"
-  (concat (format "*aws.el [profile: %s] [service: %s]" aws-profile service) "*"))
+  (concat (format "*aws.el [profile: %s] [region: %s] [service: %s]" aws-profile aws-region service) "*"))
 
 (defun aws--pop-to-buffer (name)
   "Create a buffer with NAME if not exists and switch to it."
@@ -135,22 +174,28 @@ SERVICE represents the currently active service"
     (pop-to-buffer-same-window name))
 
 (defun aws-cmd (&optional profile)
-  "Create the AWS base cmd with the right profile.
+  "Create the AWS base cmd with the right profile and region.
 Use aws-vault exec, aws-sso exec, or --profile based on aws-login-method setting.
 If PROFILE is passed it is used, otherwise the profile set in
 aws-profile is used."
   (aws--initialize-profile)
-  (let ((profile (if profile profile aws-profile)))
+  (let* ((profile (if profile profile aws-profile))
+         (profile-arg (shell-quote-argument profile))
+         (region-arg (if aws-region
+                         (concat "--region " (shell-quote-argument aws-region) " ")
+                       "")))
     (cond ((eq aws-login-method 'vault)
            (concat "aws-vault exec "
-                   profile
-                   " -- aws "))
+                   profile-arg
+                   " -- aws "
+                   region-arg))
           ((eq aws-login-method 'sso)
            (concat "aws-sso exec -p "
-                   profile
-                   " -- aws "))
+                   profile-arg
+                   " -- aws "
+                   region-arg))
           (t
-           (concat "aws --profile " profile " ")))))
+           (concat "aws --profile " profile-arg " " region-arg)))))
 
 ;;;###autoload
 (defun aws-select-profile ()
@@ -166,6 +211,22 @@ aws-profile is used."
   (interactive)
   (setq aws-profile (aws-select-profile))
   (setenv "AWS_PROFILE" aws-profile)
+  (when (functionp aws--last-view)
+    (aws--last-view)))
+
+;;;###autoload
+(defun aws-select-region ()
+  "Select the active AWS region."
+  (interactive)
+  (completing-read "Select region: " aws-regions nil t nil nil aws-region))
+
+;;;###autoload
+(defun aws-set-region ()
+  "Set active AWS region."
+  (interactive)
+  (setq aws-region (aws-select-region))
+  (setenv "AWS_REGION" aws-region)
+  (setenv "AWS_DEFAULT_REGION" aws-region)
   (when (functionp aws--last-view)
     (aws--last-view)))
 
@@ -264,6 +325,7 @@ aws-profile is used."
    ("RET" "Get selected Service" aws-get-service)
    ("L" "Login to current Account" aws-login-current-account)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Quit AWS Mode" aws-quit)])
 
 ;; MODE-MAP
@@ -273,6 +335,7 @@ aws-profile is used."
     (define-key map (kbd "?")   'aws-help-popup)
     (define-key map (kbd "L")   'aws-login-current-account)
     (define-key map (kbd "P")   'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q")   'aws-quit)
     map))
 
@@ -283,6 +346,7 @@ aws-profile is used."
   (interactive)
   (aws--check-cli-installed)
   (aws--initialize-profile)
+  (aws--initialize-region)
   (aws--pop-to-buffer (aws--buffer-name "services"))
   (aws-mode))
 
