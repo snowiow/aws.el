@@ -274,7 +274,9 @@ For non-evil users, this just moves to the input area."
 (transient-define-prefix aws-bedrock-help-popup ()
   "AWS Bedrock Help Menu"
   ["Actions"
-   ("C-<return>" "Send Message" aws-bedrock-send-input)])
+   ("C-<return>" "Send Message" aws-bedrock-send-input)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defun aws-bedrock--protect-input-area (beg end)
   "Prevent deletion before marker, but allow insertions."

@@ -54,7 +54,9 @@
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws-codepipeline--get-pipeline)
-   ("s" "Get Pipeline State" aws-codepipeline--get-pipeline-state)])
+   ("s" "Get Pipeline State" aws-codepipeline--get-pipeline-state)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-codepipeline-mode-map
   (let ((map (make-sparse-keymap)))

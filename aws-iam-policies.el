@@ -114,7 +114,9 @@ NAME is the name of the group, role or user."
    ("E" "Edit Policy" aws-iam-policies--edit-policy)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Service Overview" aws-iam)])
+   ("q" "Service Overview" aws-iam)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 ;; MODE-MAP
 (defvar aws-iam-policies-mode-map

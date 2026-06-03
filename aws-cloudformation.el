@@ -96,7 +96,9 @@ If POS is set, jump to that line in the view."
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws)
-   ("s" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)])
+   ("s" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (defvar aws-cloudformation-mode-map
   (let ((map (make-sparse-keymap)))

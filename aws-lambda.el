@@ -131,33 +131,47 @@ ARGS represent the arguments set in the transient."
    ("o" "View oufile from functions last execution" aws-lambda-view-last-execution)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Service Overview" aws)])
+   ("q" "Service Overview" aws)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (transient-define-prefix aws-lambda-invoke-popup ()
   "AWS Lambda Invoke Transient"
+  :value '("--cli-binary-format=raw-in-base64-out")
   ["Arguments"
    ("c" "[string] Up to 3583 bytes of base64 encoded data about the invoking client to pass to the function in the context object." "--client-context=")
+   (aws-lambda-invoke-cli-binary-format)
    (aws-lambda-invoke-log-type)
    ("p" "[string] The JSON that you want to provide to your Lambda function as input." "--payload=")
    ("q" "[string] Specify a version or alias to invoke a published version of the function." "--qualifier=")
    (aws-lambda-invoke-invocation-type)]
   ["Invoke"
-   ("i" "invoke function" aws-lambda-invoke)])
+   ("i" "invoke function" aws-lambda-invoke)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (transient-define-argument aws-lambda-invoke-invocation-type ()
   :description "Invocation Type"
   :class 'transient-switches
   :key "t"
   :argument-format "--invocation-type=%s"
-  :argument-regexp "\\(RequestResponse\\|Event\\|DryRun\\)"
+  :argument-regexp "\\(--invocation-type=\\(?:RequestResponse\\|Event\\|DryRun\\)\\)"
   :choices '("RequestResponse" "Event" "DryRun"))
+
+(transient-define-argument aws-lambda-invoke-cli-binary-format ()
+  :description "CLI binary format"
+  :class 'transient-switches
+  :key "b"
+  :argument-format "--cli-binary-format=%s"
+  :argument-regexp "\\(--cli-binary-format=\\(?:raw-in-base64-out\\|base64\\)\\)"
+  :choices '("raw-in-base64-out" "base64"))
 
 (transient-define-argument aws-lambda-invoke-log-type ()
   :description "Set to Tail to include the execution logs in the response"
   :class 'transient-switches
   :key "l"
   :argument-format "--log-type=%s"
-  :argument-regexp "\\(None\\|Tail\\)"
+  :argument-regexp "\\(--log-type=\\(?:None\\|Tail\\)\\)"
   :choices '("None" "Tail"))
 
 (defvar aws-lambda-mode-map

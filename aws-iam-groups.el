@@ -61,7 +61,9 @@
    ("a" "List Attached Group Policies" aws-iam-groups--list-attached-group-policies)
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
-   ("q" "Service Overview" aws-iam)])
+   ("q" "Service Overview" aws-iam)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 ;; MODE-MAP
 (defvar aws-iam-groups-mode-map

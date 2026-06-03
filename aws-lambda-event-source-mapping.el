@@ -97,7 +97,9 @@ ARGS represent the arguments set in the transient."
    ("P" "Set AWS Profile" aws-set-profile)
    ("R" "Set AWS Region" aws-set-region)
    ("q" "Lambdas" aws-lambda)
-   ("u" "Update Event Source Mapping" aws-lambda-event-source-mapping-update-popup)])
+   ("u" "Update Event Source Mapping" aws-lambda-event-source-mapping-update-popup)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (transient-define-prefix aws-lambda-event-source-mapping-update-popup ()
   "AWS Update Event Source Mapping Transient."
@@ -111,7 +113,9 @@ ARGS represent the arguments set in the transient."
    ("t" "[integer] (Streams) The duration in seconds of a processing window. The range is between 1 second up to 900 seconds." "--tumbling-window-in-seconds=")
    ("w" "[integer] (Streams and SQS standard queues) The maximum amount of time to gather records before invoking the function, in seconds" "--maximum-batching-window-in-seconds=")]
   ["Update"
-   ("u" "update event source mapping" aws-lambda-event-source-mapping-update)])
+   ("u" "update event source mapping" aws-lambda-event-source-mapping-update)]
+  ["Quit"
+   ("C-g" "Close" transient-quit-one)])
 
 (transient-define-argument aws-lambda-event-source-mapping-update-bisect ()
   :description "[boolean] (Streams) If the function returns an error, split the batch in two and retry"
