@@ -48,6 +48,7 @@
   (kbd "?")   #'aws-help-popup
   (kbd "L")   #'aws-login-current-account
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws-quit)
 
 ;; aws-cloudformation-mode
@@ -57,13 +58,15 @@
   (kbd "e") #'aws-cloudformation-describe-stack-events
   (kbd "g") #'aws-cloudformation-list-stacks-refresh
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q") #'aws
-  (kbd "R") #'aws-cloudformation-describe-stack-resources)
+  (kbd "s") #'aws-cloudformation-describe-stack-resources)
 
 ;; aws-cloudwatch-mode
 (evil-define-key 'normal aws-cloudwatch-mode-map
   (kbd "RET") #'aws-cloudwatch-alarms
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws)
 
 ;; aws-cloudwatch-alarms-mode
@@ -72,6 +75,7 @@
   (kbd "?")   #'aws-cloudwatch-alarms-help-popup
   (kbd "g")   #'aws-cloudwatch-alarms-describe-alarms-refresh
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws-cloudwatch
   (kbd "t")   #'aws-cloudwatch-alarms-enable-disable-alarm)
 
@@ -80,6 +84,7 @@
   (kbd "?")   #'aws-codebuild-help-popup
   (kbd "RET") #'aws-codebuild--get-project
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws)
 
 ;; aws-codepipeline-mode
@@ -88,6 +93,7 @@
   (kbd "?") #'aws-codepipeline-help-popup
   (kbd "e") #'aws-codepipeline--list-pipeline-executions
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q") #'aws
   (kbd "s") #'aws-codepipeline--get-pipeline-state)
 
@@ -103,6 +109,7 @@
 ;; aws-iam
 (evil-define-key 'normal aws-iam-mode-map
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "RET") #'aws-iam-groups-get-service
   (kbd "q") #'aws)
 
@@ -111,6 +118,7 @@
   (kbd "?") #'aws-iam-groups-help-popup
   (kbd "RET") #'aws-iam-groups--get-group
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "a") #'aws-iam-groups--list-attached-group-policies
   (kbd "i") #'aws-iam-groups--list-group-inline-policies
   (kbd "q") #'aws-iam)
@@ -120,12 +128,14 @@
     (kbd "?") #'aws-iam-group-inline-policies-help-popup
     (kbd "E") #'aws-iam-group-inline-policies--edit-policy
     (kbd "P") #'aws-set-profile
+    (kbd "R") #'aws-set-region
     (kbd "q") #'aws-iam-groups)
 
 ;; aws-iam-policies-mode
 (evil-define-key 'normal aws-iam-policies-mode-map
     (kbd "?") #'aws-iam-policies-help-popup
     (kbd "P") #'aws-set-profile
+    (kbd "R") #'aws-set-region
     (kbd "E") #'aws-iam-policies--edit-policy
     (kbd "q") #'aws-iam)
 
@@ -141,6 +151,7 @@
   (kbd "l")   #'aws-lambda-describe-log-streams
   (kbd "o")   #'aws-lambda-view-last-execution
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws)
 
 ;; aws-lambda-event-source-mapping
@@ -149,6 +160,7 @@
   (kbd "?")   #'aws-lambda-event-source-mapping-help-popup
   (kbd "g")   #'aws-lambda-event-source-mapping-list-refresh
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws-lambda
   (kbd "u")   #'aws-lambda-event-source-mapping-update-popup)
 
@@ -157,6 +169,7 @@
   (kbd "RET")   #'aws-logs-describe-log-group
   (kbd "?")     #'aws-logs-help-popup
   (kbd "P")     #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")     #'aws
   (kbd "s")     #'aws-log-streams-from-line-under-cursor)
 
@@ -164,6 +177,7 @@
 (evil-define-key 'normal aws-log-streams-mode-map
   (kbd "RET") #'aws-log-streams-get-log-event-in-view
   (kbd "P")   #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q")   #'aws-logs)
 
 ;; aws-s3-mode
@@ -173,6 +187,7 @@
   (kbd "g") #'aws-s3-lb-refresh
   (kbd "m") #'aws-s3-mb
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q") #'aws)
 
 ;; aws-sns-mode
@@ -180,6 +195,7 @@
   (kbd "?") #'aws-sns-help-popup
   (kbd "y") #'aws-sns-copy-arn
   (kbd "P") #'aws-set-profile
+  (kbd "R") #'aws-set-region
   (kbd "q") #'aws)
 
 ;; aws-view-mode
@@ -193,6 +209,7 @@
     (kbd "?") #'aws-bedrock-help-popup
     (kbd "c") #'aws-bedrock-clear-chat
     (kbd "P") #'aws-set-profile
+    (kbd "R") #'aws-set-region
     (kbd "q") #'aws
     (kbd "i") #'aws-bedrock-insert-mode)
 

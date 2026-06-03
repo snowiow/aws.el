@@ -82,6 +82,7 @@ BUCKET-NAME is the name of the Bucket to be deleted."
    ("g" "Refresh Buffer" aws-s3-lb-refresh)
    ("m" "Make Bucket" aws-s3-mb)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Services" aws)])
 
 (defvar aws-s3-mode-map
@@ -91,6 +92,7 @@ BUCKET-NAME is the name of the Bucket to be deleted."
     (define-key map (kbd "g") 'aws-s3-lb-refresh)
     (define-key map (kbd "m") 'aws-s3-mb)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws)
     (define-key map (kbd "r") 'aws-s3-lb-refresh)
     map))

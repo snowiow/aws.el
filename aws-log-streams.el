@@ -71,6 +71,7 @@ An optional COUNT ca be passed to limit the maximum amount of log events."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'aws-log-streams-get-log-event-in-view)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws-logs)
     map))
 

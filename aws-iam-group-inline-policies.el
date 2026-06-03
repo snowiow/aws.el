@@ -84,6 +84,7 @@
   ["Actions"
    ("E" "Edit Inline Policy" aws-iam-group-inline-policies--edit-policy)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws-iam-groups)])
 
 ;; MODE-MAP
@@ -92,6 +93,7 @@
     (define-key map (kbd "?") 'aws-iam-group-inline-policies-help-popup)
     (define-key map (kbd "E") 'aws-iam-group-inline-policies--edit-policy)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws-iam-groups)
     map))
 

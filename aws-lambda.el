@@ -130,6 +130,7 @@ ARGS represent the arguments set in the transient."
    ("L" "Get latest logs" aws-lambda-get-latest-logs)
    ("o" "View oufile from functions last execution" aws-lambda-view-last-execution)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws)])
 
 (transient-define-prefix aws-lambda-invoke-popup ()
@@ -171,6 +172,7 @@ ARGS represent the arguments set in the transient."
     (define-key map (kbd "L") 'aws-lambda-get-latest-logs)
     (define-key map (kbd "o") 'aws-lambda-view-last-execution)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws)
     map))
 

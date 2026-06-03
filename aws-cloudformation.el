@@ -94,8 +94,9 @@ If POS is set, jump to that line in the view."
    ("e" "Describe Stack Events" aws-cloudformation-describe-stack-events)
    ("g" "Refresh Buffer" aws-cloudformation-list-stacks-refresh)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws)
-   ("R" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)])
+   ("s" "Describe Stack Resource" aws-cloudformation-describe-stack-resources)])
 
 (defvar aws-cloudformation-mode-map
   (let ((map (make-sparse-keymap)))
@@ -104,8 +105,9 @@ If POS is set, jump to that line in the view."
     (define-key map (kbd "e") 'aws-cloudformation-describe-stack-events)
     (define-key map (kbd "g") 'aws-cloudformation-list-stacks-refresh)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws)
-    (define-key map (kbd "R") 'aws-cloudformation-describe-stack-resources)
+    (define-key map (kbd "s") 'aws-cloudformation-describe-stack-resources)
     map))
 
 ;;;###autoload

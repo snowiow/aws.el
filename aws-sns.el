@@ -70,6 +70,7 @@ ARN should be in the format: arn:aws:sns:region:account-id:topic-name"
   ["Actions"
    ("y" "Copy ARN" aws-sns-copy-arn)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws)])
 
 (defvar aws-sns-mode-map
@@ -77,6 +78,7 @@ ARN should be in the format: arn:aws:sns:region:account-id:topic-name"
     (define-key map (kbd "?") 'aws-sns-help-popup)
     (define-key map (kbd "y") 'aws-sns-copy-arn)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "q") 'aws)
     map))
 

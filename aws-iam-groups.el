@@ -60,6 +60,7 @@
    ("i" "List Group Inline Policies" aws-iam-groups--list-group-inline-policies)
    ("a" "List Attached Group Policies" aws-iam-groups--list-attached-group-policies)
    ("P" "Set AWS Profile" aws-set-profile)
+   ("R" "Set AWS Region" aws-set-region)
    ("q" "Service Overview" aws-iam)])
 
 ;; MODE-MAP
@@ -68,6 +69,7 @@
     (define-key map (kbd "?") 'aws-iam-groups-help-popup)
     (define-key map (kbd "RET") 'aws-iam-groups--get-group)
     (define-key map (kbd "P") 'aws-set-profile)
+    (define-key map (kbd "R") 'aws-set-region)
     (define-key map (kbd "a") 'aws-iam-groups--list-attached-group-policies)
     (define-key map (kbd "i") 'aws-iam-groups--list-group-inline-policies)
     (define-key map (kbd "q") 'aws-iam)
