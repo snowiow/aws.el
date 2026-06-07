@@ -209,10 +209,11 @@ aws-profile is used."
 (defun aws-set-profile ()
   "Set active AWS Profile."
   (interactive)
-  (setq aws-profile (aws-select-profile))
-  (setenv "AWS_PROFILE" aws-profile)
-  (when (functionp aws--last-view)
-    (aws--last-view)))
+  (let ((profile (aws-select-profile)))
+    (unless (equal profile aws-profile)
+      (setq aws-profile profile)
+      (setenv "AWS_PROFILE" aws-profile)
+      (aws--refresh-current-view))))
 
 ;;;###autoload
 (defun aws-select-region ()
@@ -224,11 +225,71 @@ aws-profile is used."
 (defun aws-set-region ()
   "Set active AWS region."
   (interactive)
-  (setq aws-region (aws-select-region))
-  (setenv "AWS_REGION" aws-region)
-  (setenv "AWS_DEFAULT_REGION" aws-region)
-  (when (functionp aws--last-view)
-    (aws--last-view)))
+  (let ((region (aws-select-region)))
+    (unless (equal region aws-region)
+      (setq aws-region region)
+      (setenv "AWS_REGION" aws-region)
+      (setenv "AWS_DEFAULT_REGION" aws-region)
+      (aws--refresh-current-view))))
+
+(defun aws--current-buffer-service ()
+  "Return the service part of the current aws.el buffer name."
+  (save-match-data
+    (when (string-match
+           "\\`\\*aws\\.el \\[profile: [^]]*\\] \\[region: [^]]*\\] \\[service: \\(.+\\)\\]\\*\\'"
+           (buffer-name))
+      (match-string 1 (buffer-name)))))
+
+(defun aws--refresh-function-for-current-mode ()
+  "Return a function that refreshes the current aws.el view."
+  (pcase major-mode
+    ('aws-mode #'aws--list-services)
+    ('aws-cloudformation-mode #'aws-cloudformation--list-stacks)
+    ('aws-cloudwatch-mode #'aws-cloudwatch--list)
+    ('aws-cloudwatch-alarms-mode #'aws-cloudwatch-alarms-describe-alarms)
+    ('aws-codebuild-mode #'aws-codebuild--list-projects)
+    ('aws-codepipeline-mode #'aws-codepipeline-list-pipelines)
+    ('aws-events-mode #'aws-events--list)
+    ('aws-events-rules-mode #'aws-events-rules-list-rules)
+    ('aws-iam-mode #'aws-iam--list)
+    ('aws-iam-groups-mode #'aws-iam-groups--list-groups)
+    ('aws-iam-policies-mode #'aws-iam-policies--list-policies)
+    ('aws-iam-group-inline-policies-mode
+     (let ((service (aws--current-buffer-service)))
+       (when (and service (string-match "group: \\([^ ]+\\)" service))
+         (let ((group (match-string 1 service)))
+           (lambda () (aws-iam-group-inline-policies--list group))))))
+    ('aws-lambda-mode #'aws-lambda--list-functions)
+    ('aws-lambda-event-source-mapping-mode
+     (when (bound-and-true-p aws-lambda-event-source-mapping-current-function-name)
+       (lambda ()
+         (aws-lambda-event-source-mapping-list
+          aws-lambda-event-source-mapping-current-function-name))))
+    ('aws-logs-mode #'aws-logs-describe-log-groups)
+    ('aws-log-streams-mode
+     (when (bound-and-true-p aws-log-streams-current-group-name)
+       (lambda ()
+         (aws-log-streams-describe-log-streams
+          aws-log-streams-current-group-name))))
+    ('aws-s3-mode #'aws-s3-lb)
+    ('aws-sns-mode #'aws-sns-list-topics)))
+
+(defun aws--refresh-current-view ()
+  "Refresh the current aws.el view after changing profile or region."
+  (let ((refresh-function (aws--refresh-function-for-current-mode))
+        (service (aws--current-buffer-service))
+        (line (line-number-at-pos)))
+    (cond
+     (refresh-function
+      (when service
+        (rename-buffer (aws--buffer-name service) t))
+      (message "Refreshing buffer...")
+      (funcall refresh-function)
+      (goto-char (point-min))
+      (forward-line (max 0 (1- line)))
+      (message "Buffer refreshed"))
+     ((functionp aws--last-view)
+      (aws--last-view)))))
 
 (defun aws-quit ()
   "Quits the aws major mode by killing all it's open buffers."
