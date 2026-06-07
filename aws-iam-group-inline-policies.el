@@ -109,7 +109,7 @@
 
 (define-derived-mode aws-iam-group-inline-policies-mode tabulated-list-mode "aws-iam-group-inline-policies"
   "AWS IAM Group Policies mode."
-  (setq major-mode 'aws-iam-group-inline-policies)
+  (setq major-mode 'aws-iam-group-inline-policies-mode)
   (use-local-map aws-iam-group-inline-policies-mode-map))
 
 (define-minor-mode aws-iam-group-inline-policies-edit-mode

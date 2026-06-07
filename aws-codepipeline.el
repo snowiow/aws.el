@@ -29,7 +29,7 @@
 
 (defun aws-codepipeline-list-pipelines ()
   "List all CodePipelines."
-  (fset 'aws--last-view 'aws-lambda)
+  (fset 'aws--last-view 'aws-codepipeline)
   (aws-core--tabulated-list-from-command
    "codepipeline list-pipelines --output=text --query 'pipelines[*].name'"
    [("CodePipeline" 100)]))
@@ -73,8 +73,8 @@
 (defun aws-codepipeline ()
   "Open the AWS Codepipeline Mode."
   (interactive)
-  (setq major-mode 'aws-codepipeline-mode)
-  (use-local-map aws-codepipeline-mode-map)
+  (aws--pop-to-buffer (aws--buffer-name "codepipeline"))
+  (aws-codepipeline-mode)
   (aws-codepipeline-list-pipelines))
 
 (define-derived-mode aws-codepipeline-mode tabulated-list-mode "aws-codepipeline"
